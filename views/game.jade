@@ -1,0 +1,16 @@
+head
+
+body
+  block content
+    if user
+        p#username You are currently logged in as #{user.username}
+    #container
+  block scripts
+    script(src='http://code.jquery.com/jquery.js')
+    script(src='/vendor/three.min.js')
+    script(src='/vendor/Detector.js')
+    script(src='/vendor/OrbitControls.js')
+    script(src='/vendor/tween.js')
+    script(src='/vendor/socket.io-1.2.0.js')
+    script(src='/js/game.js')
+

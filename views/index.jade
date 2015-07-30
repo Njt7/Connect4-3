@@ -1,0 +1,32 @@
+extends layout
+
+block content
+  .container
+
+    if (!user)
+      form(action='/mainMenu')
+        input(type='submit', value='Play')
+      br
+      
+      form(action='/login')
+        input(type='submit', value='Login')
+      br
+        
+      form(action='/register')
+        input(type='submit', value='Register')
+      br
+
+
+    if (user)
+      p You are currently logged in as #{user.username}
+      br
+      form(action='/mainMenu')
+        input(type='submit', value='Play')
+      br
+
+      form(action='/logout')
+        input(type='submit', value='Logout')
+      br
+        
+      form#new_message(method='get', action='/settings', type='submit')
+        input#message_submit(type='submit', value='Settings', name='commit') 

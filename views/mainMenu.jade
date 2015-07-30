@@ -1,0 +1,29 @@
+extends layout
+
+block content
+  .container
+    if (user)
+      p You are currently logged in as #{user.username}
+      br
+
+    form#new_message(method='get', action='/hotseat', type='submit')
+      input#message_submit(type='submit', value='Hot Seat', name='commit') 
+    br
+    input#randomQueue(type='submit', value='Find match', name='commit')
+    br
+
+    if (!user)
+      br
+      input#notUser(type='button', value='Challenge a friend*', name='commit')
+      br
+
+    if (user)
+      br
+      form#new_message(method='get', action='/challenge', type='submit')
+        input#message_submit(type='submit', value='Challenge a friend*', name='commit') 
+      
+  //
+    .messagepop.pop
+      p Searching for opponent
+        a.close(href='/') Cancel
+    a#contact(href='/contact') Find a opponent
