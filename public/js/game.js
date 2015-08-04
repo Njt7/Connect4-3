@@ -20,7 +20,10 @@ var windowHalfY = window.innerHeight / 2;
 
 var rollOverMesh, rollOverMaterial;
 var sphereGeo, sphereMaterial;
+var latestMoveMesh;
 var dynamicBorder;
+
+var loader;
 
 var objects = [];
 var moves = createArray(4, 4, 4);
@@ -52,7 +55,7 @@ else if(vars['room'] !== undefined && gameMode != 'hotseat'){
   gameMode = 'randomMultiplayer';
   socket.emit('joinRoom', vars['room']);
 }
-socket.emit('assignplayer', vars['playerid']);
+socket.emit('assignplayer', vars['playerid'], vars['room'], vars['playerunique']);
 
 function init() {
   container = document.getElementById( 'container' );
@@ -69,6 +72,8 @@ function init() {
   //info.innerHTML = '<a href="http://threejs.org" target="_blank">three.js</a> - voxel painter - webgl<br><strong>click</strong>: add voxel, <strong>shift + click</strong>: remove voxel';
   container.appendChild( info );
   */
+
+  //Textures
 
   camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 1, 10000 );
   camera.position.set( 500, 1600, 1300 );
@@ -88,8 +93,22 @@ function init() {
   rollOverMesh = new THREE.Mesh( rollOverGeo, rollOverMaterial );
   scene.add( rollOverMesh );
 
+  //Most recent move visualizer mesh.
+  var latestMoveGeo = new THREE.SphereGeometry( 90, 100, 100 );
+  var latestMoveMaterial = new THREE.MeshBasicMaterial( { color: 0xffffff, opacity: 0.45, transparent: true } );
+  latestMoveMesh = new THREE.Mesh( latestMoveGeo, latestMoveMaterial );
+  latestMoveMesh.position.y = 4000;
+  scene.add( latestMoveMesh );
+
   // cubes
 
+  /*
+  var texture = THREE.ImageUtils.loadTexture( "/textures/pattern-truchet.png" );
+  texture.wrapS = THREE.RepeatWrapping;
+  texture.wrapT = THREE.RepeatWrapping;
+  texture.repeat.set( 1, 1 );
+   --Texture mapping test-- sphereMaterial = new THREE.MeshPhongMaterial( { color: 0xff0000, ambient: 0xff0000, map: texture, shading: THREE.SmoothShading } );
+  */
   //sphereGeo = new THREE.BoxGeometry( 250, 250, 250 );
   sphereGeo = new THREE.SphereGeometry( 80, 20, 20 );
   sphereMaterial = new THREE.MeshPhongMaterial( { color: 0xff0000, ambient: 0xff0000, shading: THREE.SmoothShading } );
@@ -97,12 +116,12 @@ function init() {
 
   // grid
 
-  var lineMaterial = new THREE.LineBasicMaterial( { color: 0x000000, opacity: 0.2, transparent: true } );
-
+  var lineMaterial = new THREE.LineBasicMaterial( { color: 0x00000, opacity: 0.5, transparent: true, linewidth: 10  } );
+  console.log('linematerial widthness %s', lineMaterial.linewidth);
   var geometry = new THREE.Geometry();
   geometry.vertices.push(
     new THREE.Vector3( 0, 0, 0 ),
-    new THREE.Vector3( 0, 1000, 0 )
+    new THREE.Vector3( 0, 750, 0 )
   );
   var startPosX = - size + step * 0.5;
   var startPosZ = - size + step * 0.5;
@@ -129,8 +148,8 @@ function init() {
 
   }
 
-
-  var line = new THREE.Line( geometry, lineMaterial, THREE.LinePieces );
+  var lineMaterial2 = new THREE.LineBasicMaterial( { color: 0x000000, opacity: 0.2, transparent: true, lineWidth: 10  } );
+  var line = new THREE.Line( geometry, lineMaterial2, THREE.LinePieces );
   scene.add( line );
 
 
@@ -443,7 +462,7 @@ socket.on('player action', function(msg){
   sphere.position.x = msg.x;
   sphere.position.y = msg.y;
   sphere.position.z = msg.z;
-        
+  
   var orgAniPos = { x : msg.x, y : msg.y + 1000, z : msg.z};
   var tween = new TWEEN.Tween(orgAniPos).to(msg);
   tween.easing(TWEEN.Easing.Bounce.Out);
@@ -455,6 +474,9 @@ socket.on('player action', function(msg){
     sphere.position.y = orgAniPos.y;
     sphere.position.z = orgAniPos.z;
   });
+
+  //Most recent move visualiser.
+  latestMoveMesh.position.copy(msg);
 });
 
 function hotSeatPlayerAction(msg){
@@ -482,11 +504,13 @@ function hotSeatPlayerAction(msg){
   console.log(sphere.position.y);
 
   msg.y = heightPositionModifier(msg.y);
-  
+
+
   var orgAniPos = { x : msg.x, y : msg.y + 1000, z : msg.z };
   sphere.position.x = orgAniPos.x;
   sphere.position.y = orgAniPos.y;
   sphere.position.z = orgAniPos.z;
+  
 
   var tween = new TWEEN.Tween(orgAniPos).to(msg);
   tween.easing(TWEEN.Easing.Bounce.Out);
@@ -498,6 +522,9 @@ function hotSeatPlayerAction(msg){
     sphere.position.y = orgAniPos.y;
     sphere.position.z = orgAniPos.z;
   });
+
+  //Most recent move visualizer.
+  latestMoveMesh.position.copy(msg);
 }
 
 function winCheck(x, y, z, player) {
@@ -587,3 +614,4 @@ function denormalizePosition(position){
 };
 
 });
+

@@ -110,8 +110,8 @@ matchListener.on('match', function(result) {
     //Redirecting saved responses to a unique response
     //savedResponses[result.a['userId']].redirect('game/?mode=unranked&room=' + result.room);
     //savedResponses[result.b['userId']].redirect('game/?mode=unranked&room=' + result.room);
-    savedResponses[result.a['userId']].send('game/?mode=unranked&playerid=playerone&room=' + result.room);
-    savedResponses[result.b['userId']].send('game/?mode=unranked&playerid=playertwo&room=' + result.room);
+    savedResponses[result.a['userId']].send('game/?mode=unranked&playerid=playerone&room=' + result.room + '&playerunique=' + result.a['userId']);
+    savedResponses[result.b['userId']].send('game/?mode=unranked&playerid=playertwo&room=' + result.room + '&playerunique=' + result.b['userId']);
     delete savedResponses[result.a['userId']];
     delete savedResponses[result.b['userId']];
 });

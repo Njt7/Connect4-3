@@ -1,5 +1,6 @@
 var socketio = require('socket.io')
 var winChecker = require('../libs/wincheck');
+var activeGames = {};
 
 
 module.exports.listen = function(app){
@@ -10,6 +11,7 @@ module.exports.listen = function(app){
     io.on('connection', function(socket){
 		console.log('a user connected:%s', socket );
 			socket.on('disconnect', function(){
+			console.log(socket.playerid);
 			console.log('user disconnected');
 		});
 		socket.on('chat message', function(msg){
@@ -42,15 +44,32 @@ module.exports.listen = function(app){
 			console.log('io.sockets%s', data);
 		});
 
-		socket.on('joinRoom', function(data){
-			socket.join(data);
-			socket.room = data;
-			console.log('joined room:%s', data);
+		socket.on('joinRoom', function(randomRoomName){
+			console.log('joined room:%s', randomRoomName);
+			socket.join(randomRoomName);
+			if(activeGames[randomRoomName] === undefined){
+				//initialize empty game
+				activeGames[randomRoomName] = {isGame:'active', 
+				playerOne:undefined, 
+				playerTwo:undefined, 
+				turns:undefined,
+				moves:[]
+				};  
+			}
+			socket.room = randomRoomName;
 		});
-		socket.on('assignplayer', function(data){
+		socket.on('assignplayer', function(playerid, roomName, playerunique){
 			if(socket.playerid === undefined)
-			{
-				socket.playerid = data;
+			{				
+				if(playerid === 'playerone')
+				{
+					activeGames[roomName].playerone = playerunique;
+				}
+				else if(playerid === 'playertwo')
+				{
+					activeGames[roomName].playerone = playerunique;	
+				}
+				socket.playerid = playerid;
 				console.log('socket.playerid: %s', socket.playerid);
 			}
 		});
