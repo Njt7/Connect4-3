@@ -1,6 +1,7 @@
 var socketio = require('socket.io')
-var winChecker = require('../libs/wincheck');
+var winChecker = require('../libs/wincheck.js');
 var activeGames = {};
+var utilityFunctions = require('../libs/utilityFunctions.js')
 
 
 module.exports.listen = function(app){
@@ -10,55 +11,65 @@ module.exports.listen = function(app){
     
     io.on('connection', function(socket){
 		console.log('a user connected:%s', socket );
-			socket.on('disconnect', function(){
+		
+		socket.on('disconnect', function(){
+
 			console.log(socket.playerid);
 			console.log('user disconnected');
 		});
 		socket.on('chat message', function(msg){
+
 			console.log('message: ' + msg);
 			io.emit('chat message', msg);
 		});
-		socket.on('player action', function(data, turns){
-			if(turns === 1 && socket.playerid === 'playerone'){
+		socket.on('player action', function(screenPositions, turns){
+
+			if(activeGames[socket.room].turns%2 === 1 && socket.playerid === 'playerone')
+			{
 				console.log('illegal move from playerone');
 				return;
 			}
-			if(turns === 0 && socket.playerid === 'playertwo'){
+			else if(activeGames[socket.room].turns%2 === 0 && socket.playerid === 'playertwo')
+			{
 				console.log('illegal move from playertwo');
 				return;
 			}
-			for (var key in data)
-			{
-				console.log('data key%s', key);
-			}
+			//Increment turns by 1;
+			activeGames[socket.room].turns++;
 
-			for (var key in socket)
+			//Add action to server side representation of the game
+			var boardCoordinates = utilityFunctions.screenToBoardPosition(screenPositions);
+			if(socket.playerid === 'playerone')
 			{
-				console.log('socket key%s', key);
+				activeGames[socket.room].moves[boardCoordinates.x, boardCoordinates.y, boardCoordinates.z] = 0;
 			}
-			for (var key in io.sockets.in(socket.room))
-			{
-				console.log('io.sockets.in.room key %s', key);
+			else if(socket.playerid === 'playertwo'){
+				activeGames[socket.room].moves[boardCoordinates.x, boardCoordinates.y, boardCoordinates.z] = 1;
 			}
-			io.sockets.in(socket.room).emit('player action', data);
-			console.log('io.sockets%s', data);
+			console.log(activeGames[socket.room].moves);
+			//Sends action to player clients
+			io.sockets.in(socket.room).emit('player action', screenPositions);
 		});
 
 		socket.on('joinRoom', function(randomRoomName){
+
 			console.log('joined room:%s', randomRoomName);
+			console.log('lets watch what happens here %s', utilityFunctions.createArray(4, 4, 4));
 			socket.join(randomRoomName);
 			if(activeGames[randomRoomName] === undefined){
 				//initialize empty game
-				activeGames[randomRoomName] = {isGame:'active', 
-				playerOne:undefined, 
-				playerTwo:undefined, 
-				turns:undefined,
-				moves:[]
+				activeGames[randomRoomName] = {
+					isGame:'active', 
+					playerOne:undefined, 
+					playerTwo:undefined, 
+					turns:0,
+					moves:utilityFunctions.createArray(4, 4, 4)
 				};  
 			}
 			socket.room = randomRoomName;
 		});
 		socket.on('assignplayer', function(playerid, roomName, playerunique){
+
 			if(socket.playerid === undefined)
 			{				
 				if(playerid === 'playerone')
@@ -67,14 +78,14 @@ module.exports.listen = function(app){
 				}
 				else if(playerid === 'playertwo')
 				{
-					activeGames[roomName].playerone = playerunique;	
+					activeGames[roomName].playertwo = playerunique;	
 				}
 				socket.playerid = playerid;
 				console.log('socket.playerid: %s', socket.playerid);
 			}
 		});
 		socket.on('match', function(data){
-			console.log('WAOW');
+			console.log('WAOW');//todo ???
 		});
 		socket.on('win check', function(nX, nY, nZ, player, moves){
 			//winChecker.checkAll(nX, nY, nZ, moves, player);

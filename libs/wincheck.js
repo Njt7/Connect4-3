@@ -2,8 +2,8 @@ var THREE = require('three');
 var winCheckResult;
 
 module.exports.checkAll = function (x, y, z, player, moves){
-  console.log("player %s",player);
-  console.log(moves);
+  //console.log("player %s",player);
+  //console.log(moves);
   winCheckResult = [];
   checkVertical(x, z, player, moves);
   checkHorizontal(y, z, player, moves);
@@ -30,7 +30,7 @@ function win(player, winningPieces)
 {
   winCheckResult.push(player);
   winCheckResult.push(winningPieces);
-  console.log('HEEEEEEEEEEEEEEEEEEEEEEJJJJJJJJJJJJJ');
+  console.log('We have a winner! wincheck.js');
   return player, winningPieces;
 }
 

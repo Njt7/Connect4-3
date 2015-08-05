@@ -425,22 +425,11 @@ socket.on('winner', function(msg){
   console.log('winner %s', msg);
   win(msg[0], msg[1]);
 });
-$('form').submit(function(){
-socket.emit('chat message', $('#m').val());
-$('#m').val('');
-return false;
-});
-socket.on('chat message', function(msg){
-$('#messages').append($('<li>').text(msg));
-});
-socket.on('connection', function(msg){
-$('#messages').append($('<li>').text('connection'));
-});
-socket.on('player action', function(msg){
+socket.on('player action', function(receivedPosition){
 
   //moves[(msg.x+375)/step][(msg.y-125)/step][(msg.y-125)/step,((msg.z-375)/step)*-1] = turns % 2;
   //Checking for win conditions as well as legal moves
-  if(winCheck(msg.x, msg.y, msg.z, (turns % 2)) === false){
+  if(boardCheck(receivedPosition.x, receivedPosition.y, receivedPosition.z, (turns % 2)) === false){
     return; //TODO: Bättre
   }
 
@@ -457,14 +446,14 @@ socket.on('player action', function(msg){
     borderColorTween(redColor);
   }
   
-  msg.y = heightPositionModifier(msg.y);
+  receivedPosition.y = heightPositionModifier(receivedPosition.y);
 
-  sphere.position.x = msg.x;
-  sphere.position.y = msg.y;
-  sphere.position.z = msg.z;
+  sphere.position.x = receivedPosition.x;
+  sphere.position.y = receivedPosition.y;
+  sphere.position.z = receivedPosition.z;
   
-  var orgAniPos = { x : msg.x, y : msg.y + 1000, z : msg.z};
-  var tween = new TWEEN.Tween(orgAniPos).to(msg);
+  var orgAniPos = { x : receivedPosition.x, y : receivedPosition.y + 1000, z : receivedPosition.z};
+  var tween = new TWEEN.Tween(orgAniPos).to(receivedPosition);
   tween.easing(TWEEN.Easing.Bounce.Out);
   tween.start();
   scene.add( sphere );
@@ -476,13 +465,12 @@ socket.on('player action', function(msg){
   });
 
   //Most recent move visualiser.
-  latestMoveMesh.position.copy(msg);
+  latestMoveMesh.position.copy(receivedPosition);
 });
 
 function hotSeatPlayerAction(msg){
-    //moves[(msg.x+375)/step][(msg.y-125)/step][(msg.y-125)/step,((msg.z-375)/step)*-1] = turns % 2;
   //Checking for win conditions as well as legal moves
-  if(winCheck(msg.x, msg.y, msg.z, (turns % 2)) === false){
+  if(boardCheck(msg.x, msg.y, msg.z, (turns % 2)) === false){
     return; //TODO: Bättre
   }
 
@@ -527,56 +515,55 @@ function hotSeatPlayerAction(msg){
   latestMoveMesh.position.copy(msg);
 }
 
-function winCheck(x, y, z, player) {
-//console.log("test %s %s %s %s", x, y, z, player);
-//screen simplefied board coordinates
-var normX = (x + 375) / step;
-var normY = (y - 125) / step;
-var normZ = ((z - 375) / step) * -1;
-//Insert player number into board corresponding coordinates.
-console.log("test x: %s y :%s  z: %s spelarNummer %s ", normX, normY, normZ, player);
-if(moves[normX][normY][normZ] !== undefined){
-  //illegal move TODO: Bättre
-  return false;
+function boardCheck(x, y, z, player) {
+  //console.log("test %s %s %s %s", x, y, z, player);
+  //screen simplefied board coordinates
+  var normX = (x + 375) / step;
+  var normY = (y - 125) / step;
+  var normZ = ((z - 375) / step) * -1;
+  //Insert player number into board corresponding coordinates.
+  console.log("test x: %s y :%s  z: %s spelarNummer %s ", normX, normY, normZ, player);
+  if(moves[normX][normY][normZ] !== undefined){
+    //illegal move TODO: Bättre
+    return false;
+  }
+  moves[normX][normY][normZ] = player;
+
+  socket.emit('win check', normX, normY, normZ, player, moves);
+
+  return true;
 }
-moves[normX][normY][normZ] = player;
-
-socket.emit('win check', normX, normY, normZ, player, moves);
-
-return true;
-}
-
 
 function win(player, winningpcs){
-if(winningpcs){
-  //take first and last position to draw a line. 
+  if(winningpcs){
+    //take first and last position to draw a line. 
 
-  var startpos = denormalizePosition(winningpcs[0]);
-  var finalpos = denormalizePosition(winningpcs[3]);
-  startpos.y = heightPositionModifier(startpos.y);
-  finalpos.y = heightPositionModifier(finalpos.y);
-  var material = new THREE.LineBasicMaterial({
-    color: 0xffffff
-  });
+    var startpos = denormalizePosition(winningpcs[0]);
+    var finalpos = denormalizePosition(winningpcs[3]);
+    startpos.y = heightPositionModifier(startpos.y);
+    finalpos.y = heightPositionModifier(finalpos.y);
+    var material = new THREE.LineBasicMaterial({
+      color: 0xffffff
+    });
 
-  //create line and animate from white to gold.
-  var geometry = new THREE.Geometry();
-  geometry.vertices.push(
-    new THREE.Vector3( startpos.x, startpos.y, startpos.z),
-     new THREE.Vector3( finalpos.x, finalpos.y, finalpos.z));
+    //create line and animate from white to gold.
+    var geometry = new THREE.Geometry();
+    geometry.vertices.push(
+      new THREE.Vector3( startpos.x, startpos.y, startpos.z),
+       new THREE.Vector3( finalpos.x, finalpos.y, finalpos.z));
 
-  var line = new THREE.Line( geometry, material );
-  var aniColor = new THREE.Color( "rgb(255,215,0)" );
-  var tween2 = new TWEEN.Tween(line.material.color).to(aniColor);
-  tween2.easing(TWEEN.Easing.Elastic.InOut);
-  tween2.yoyo(true);
-  tween2.repeat( Infinity );
-  tween2.delay( 1000 );
-  tween2.start();
+    var line = new THREE.Line( geometry, material );
+    var aniColor = new THREE.Color( "rgb(255,215,0)" );
+    var tween2 = new TWEEN.Tween(line.material.color).to(aniColor);
+    tween2.easing(TWEEN.Easing.Elastic.InOut);
+    tween2.yoyo(true);
+    tween2.repeat( Infinity );
+    tween2.delay( 1000 );
+    tween2.start();
 
-  scene.add( line );
-  }
-alert("Player %s won!", player);
+    scene.add( line );
+    }
+  alert("Player %s won!", player);
 }
 
 function heightPositionModifier(positionY){
@@ -590,10 +577,10 @@ function heightPositionModifier(positionY){
 //Helper functions
 
 function createArray(length) {
-var arr = new Array(length || 0),
-    i = length;
+  var arr = new Array(length || 0),
+      i = length;
 
-if (arguments.length > 1) {
+  if (arguments.length > 1) {
     var args = Array.prototype.slice.call(arguments, 1);
     while(i--) arr[length-1 - i] = createArray.apply(this, args);
   }
@@ -614,4 +601,3 @@ function denormalizePosition(position){
 };
 
 });
-
