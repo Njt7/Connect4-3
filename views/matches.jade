@@ -1,0 +1,19 @@
+//matches page
+//TODO Gör om querystring så att all relevant information läses av i game.js och initialiserar correcta inställningar på socket
+extends layout
+
+block content
+	if (dbdata.length > 0 )
+		- for (var i = 0; i < dbdata.length; i++)
+			#container
+				if(dbdata[i].playerOneId === user.username)
+					br
+					input.match(type='submit', value='Versus: ' + dbdata[i].playerTwoId, name=dbdata[i]._id, playerid='playerone', playerunique=user._id, playeroneid=dbdata[i].playerOneId, playertwoid=dbdata[i].playerTwoId)
+					br
+				else if (dbdata[i].playerTwoId === user.username)
+					br
+					input.match(type='submit', value='Versus: ' + dbdata[i].playerOneId, name=dbdata[i]._id, playerid='playertwo', playerunique=user._id, playeroneid=dbdata[i].playerOneId, playertwoid=dbdata[i].playerTwoId) 
+					br
+	else
+		br
+		p You dont have any active matches

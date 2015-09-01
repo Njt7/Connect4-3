@@ -1,26 +1,18 @@
-h1 {
-	color: red;
-}
-
+/*
+#7EC0EE//blue
+#E47EEE //purple
+#EEAC7E //orange/brownish
+#88EE7E //green;
+*/
 body {
   padding: 50px;
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+  background-color:#7EC0EE; 
 }
+h1 {
+text-align: center;
 
-a {
-  	color: #00B7FF;
 }
-
-a.selected {
-  background-color:#1F75CC;
-  color:white;
-  z-index:100;
-}
-a.close {
-	padding-right: 5px;
-  z-index:100;
-}
-
 .messagepop {
   background-color:#FFFFFF;
   border:1px solid #999999;
@@ -55,7 +47,61 @@ input    {
 	-webkit-box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.3);
 	-moz-box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.3);
 	box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.3);
+	background-color:#EEAC7E;
 }
+input.dividedInput    {
+	width:25%;
+	display:inline;
+	border: 1px solid #999;
+	height: 100px;
+	-webkit-box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.3);
+	-moz-box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.3);
+	box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.3);
+}
+input.accept    {
+	width:50%;
+	display:inline;
+	border: 1px solid #999;
+	background-color: #33FF66;
+	height: 100px;
+	-webkit-box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.3);
+	-moz-box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.3);
+	box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.3);
+}
+input.challenge    {
+	width:100%;
+	display:inline;
+	border: 1px solid #999;
+	height: 100px;
+	-webkit-box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.3);
+	-moz-box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.3);
+	box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.3);
+}
+input.decline    {
+	width:50%;
+	display:inline;
+	border: 1px solid #999;
+	background-color: #B33A3A;
+	height: 100px;
+	-webkit-box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.3);
+	-moz-box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.3);
+	box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.3);
+}
+
+form.topNav {
+	display:inline;
+}
+
+p.myFoot {
+	text-align: center;
+	font: 40px "Lucida Grande", Helvetica, Arial, sans-serif;
+	color: #EEAC7E;
+}
+a.myFoot{
+	color: #000000;
+}
+
+
 
 /*
 form    {
@@ -80,6 +126,27 @@ form    {
 	-moz-box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.3);
 	box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.3);
 }
+
+a {
+  	color: #00B7FF;
+}
+
+a.selected {
+  background-color:#1F75CC;
+  color:white;
+  z-index:100;
+}
+a.close {
+	padding-right: 5px;
+  z-index:100;
+}
+a.test {
+	color: #000000;
+}
+p.lead {
+	text-align:center;
+}
+
 */
 
 #oldie { background-color: #ddd !important }

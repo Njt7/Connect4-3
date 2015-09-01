@@ -1,0 +1,17 @@
+//profile page, see challenges
+extends layout
+
+block content
+	if (dbdata.length > 0 )
+		- for (var i = 0; i < dbdata.length; i++)
+			if (dbdata[i].challenger != user.username)
+				#container
+					br
+					value='You have been challenged by: '+ dbdata[i].challenger
+					br
+					input.accept(type='submit', value='Accept', id=dbdata[i]._id)
+					input.decline(type='submit', value='Decline', id=dbdata[i]._id)
+					br
+	else
+		br
+		p You dont have any challenges

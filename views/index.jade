@@ -4,6 +4,7 @@ block content
   .container
 
     if (!user)
+      br
       form(action='/mainMenu')
         input(type='submit', value='Play')
       br
@@ -18,6 +19,7 @@ block content
 
 
     if (user)
+      br
       p You are currently logged in as #{user.username}
       br
       form(action='/mainMenu')

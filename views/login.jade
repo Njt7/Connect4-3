@@ -3,14 +3,14 @@ extends layout
 block content
   .container
     h1 Login Page
-    p.lead Say something worthwhile here.
+    p.lead This is the place where you enter your registered credentials to log in.
     br
-    form(role='form', action="/login",method="post", style='max-width: 300px;')
+    form(role='form', action="/login",method="post", style='width: 100%;')
       .form-group
-          input.form-control(type='text', name="username", placeholder='Enter Username')
+          input.form-control(type='text', name="username", placeholder='Username')
       .form-group
         input.form-control(type='password', name="password", placeholder='Password')
-      button.btn.btn-default(type='submit') Submit
+      button.btn.btn-default(type='submit', style='width: 50%;') Log in
       &nbsp;
       a(href='/')
-        button.btn.btn-primary(type="button") Cancel
+        button.btn.btn-primary(type="button", style='width: 49%;') Cancel

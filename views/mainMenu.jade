@@ -3,6 +3,7 @@ extends layout
 block content
   .container
     if (user)
+      br
       p You are currently logged in as #{user.username}
       br
 
@@ -19,8 +20,8 @@ block content
 
     if (user)
       br
-      form#new_message(method='get', action='/challenge', type='submit')
-        input#message_submit(type='submit', value='Challenge a friend*', name='commit') 
+      form#new_message(method='get', action='/sendchallenge', type='submit')
+        input#message_submit(type='submit', value='Send a challenge', name='commit') 
       
   //
     .messagepop.pop

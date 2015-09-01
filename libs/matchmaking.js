@@ -66,9 +66,7 @@ function generateRoom(length) {
     return room;
 };
 
-// extend the EventEmitter class using our Radio class
 util.inherits(matchmaking, EventEmitter);
 
-// we specify that this module is a refrence to the Radio class
 module.exports = matchmaking;
 

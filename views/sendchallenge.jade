@@ -1,0 +1,20 @@
+//Challenge a user.
+extends layout
+
+block content
+	h1 Click a name to challenge or search
+	form(role='form', action="/search",method="get", style='width:100%')
+		.form-group
+		input.form-control(type='text', name="search", placeholder='Enter username to search')
+		br
+		button.btn.btn-default(type='submit', style='width:100%') Submit
+		br
+	- for (var i = 0; i < accs.length; i++)
+		if(i%2 === 0)
+			br
+			input.challenge(type='submit', value=accs[i].username, name='reciever', style='background-color:#E47EEE')
+			br
+		else
+			br
+			input.challenge(type='submit', value=accs[i].username, name='reciever', style='background-color:#88EE7E')
+			br
