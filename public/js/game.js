@@ -121,6 +121,7 @@ function init() {
   scene = new THREE.Scene();
 
   //Testing skysphere
+  /*
   geometry = new THREE.SphereGeometry(3000, 60, 40);  
   var uniforms = {  
     texture: { type: 't', value: THREE.ImageUtils.loadTexture('/textures/milky_way_galaxy_2-wallpaper-1024x768.jpg') }
@@ -137,7 +138,7 @@ function init() {
   skyBox.eulerOrder = 'XZY';  
   skyBox.renderDepth = 1000.0;  
   scene.add(skyBox);  
-
+*/
   // roll-over helpers
 
   //rollOverGeo = new THREE.BoxGeometry( 250, 250, 250 );
@@ -172,7 +173,6 @@ function init() {
 
   //"height sticks"
   var lineMaterial = new THREE.LineBasicMaterial( { color: 0xffffff, opacity: 0.5, transparent: true, linewidth: 10  } );
-  console.log('linematerial widthness %s', lineMaterial.linewidth);
   var geometry = new THREE.Geometry();
   geometry.vertices.push(
     new THREE.Vector3( 0, 0, 0 ),
@@ -186,7 +186,7 @@ function init() {
     var line = new THREE.Line( geometry, lineMaterial );
     line.position.x = startPosX + i * step;
     line.position.z = startPosZ + y * step;
-    scene.add(line); //TODO
+    scene.add(line);
 
     }         
   }
@@ -221,7 +221,6 @@ function init() {
     quickPositionFix.z = parseInt(i / 4);
     
     quickPositionFix = denormalizePosition(quickPositionFix); 
-    console.log(quickPositionFix);
     var geometry = new THREE.PlaneBufferGeometry( 250, 250 );
     geometry.applyMatrix( new THREE.Matrix4().makeRotationX( - Math.PI / 2 ) );
 
@@ -233,7 +232,6 @@ function init() {
     intersectPlane.visible = true;
     scene.add( intersectPlane );
     objects.push( intersectPlane ); 
-    //TODO FIX INTERSECT MOT INTERSECTPLANE ISTÄLLET FÖR PLANE DET ÄR DÄR HÖJDSKILLNADEN SKER
   };
 
   /*
@@ -522,7 +520,7 @@ socket.on('player action', function(receivedPosition, coords){
   console.log(coords);
   //Checking for win conditions as well as legal moves
   if(boardCheck(receivedPosition.x, receivedPosition.y, receivedPosition.z, passCoordsOn, (turns % 2)) === false ){
-    return; //TODO: Bättre
+    return; //TODO: A check that cant be circumvented as well as looks if its possible to place a piece there.
   }
   console.log('do we reach this state?');
 
@@ -566,7 +564,7 @@ function hotSeatPlayerAction(msg, coords){
   var passCoordsOn = new THREE.Vector3(coords.x, coords.y, coords.z);
   //Checking for win conditions as well as legal moves
   if(boardCheck(msg.x, msg.y, msg.z, passCoordsOn, (turns % 2)) === false ){
-    return; //TODO: Bättre
+    return; //TODO: A check that cant be circumvented as well as looks if its possible to place a piece there.
   }
 
   var sphere;

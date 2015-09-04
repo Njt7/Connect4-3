@@ -116,6 +116,12 @@ router.get('/removematches', function(req, res) {
     });
 });
 
+router.get('/removehistory', function(req, res) {
+    HistoryMatch.remove({}, function(err, histories){
+        res.render('history', { dbdata: histories });
+    });
+});
+
 
 router.get('/sendchallenge', function(req, res) {
     //Only find and return logged in users

@@ -2,7 +2,7 @@ var socketio = require('socket.io')
 var winChecker = require('../libs/wincheck.js');
 var activeGames = {};
 var utilityFunctions = require('../libs/utilityFunctions.js')
-var passportSocketIo = require("passport.socketio");
+var passportSocketIo = require('passport.socketio');
 var Challenge = require('../models/challenge');
 var Match = require('../models/match');
 var HistoryMatch = require('../models/history');
@@ -31,6 +31,9 @@ module.exports.listen = function(app){
 				Match.findById(socket.matchid, function (err, match) {
 					if (err) return console.error(err);
 						console.log(match);
+						if(!match){
+							return;
+						}
 						match.moves = utilityFunctions.create1DArrayFrom3D(activeGames[socket.room].moves);
 						match.save(function (err, match) {
 						if (err) return console.error(err);
@@ -49,6 +52,7 @@ module.exports.listen = function(app){
 		//game play socket actions
 		socket.on('player action', function(screenPositions, boardCoordinates, turns){
 			console.log(screenPositions);
+			console.log(activeGames[socket.room]);
 			//todo Fix undefined in moves here what is in screenpositions?
 			if(activeGames[socket.room].turns%2 === 1 && socket.playerid === 'playerone')
 			{
@@ -103,11 +107,11 @@ module.exports.listen = function(app){
 			{				
 				if(playerid === 'playerone')
 				{
-					activeGames[roomName].playerone = playerunique;
+					activeGames[roomName].playerOne = playerunique;
 				}
 				else if(playerid === 'playertwo')
 				{
-					activeGames[roomName].playertwo = playerunique;	
+					activeGames[roomName].playerTwo = playerunique;	
 				}
 
 				socket.playerid = playerid;
@@ -124,26 +128,33 @@ module.exports.listen = function(app){
 			if(winResult){//Todo room specific emit
 			  socket.emit('winner', winResult);
 			  //TODO testing so that we dont overuse the db connection with needless remove calls
+			  if(activeGames[socket.room].isGame === 'finished'){
+			  	console.log('GAME IS FINISHED DONT MAKE DUPLICATE HISTORY');
+			  	return;
+			  }
+			  activeGames[socket.room].isGame = 'finished';
 			  Match.findById(socket.matchid, function (err, match) {
 					if (err) return console.error(err);
+					console.log(socket.matchid);
+					console.log(match);
 
 					var historyMatch = new HistoryMatch({ 
-						playerOneId: match.playerOneId, 
-						playerTwoId: match.playerTwoId, 
+						playerOneId: match.playerOneId,
+ 						playerTwoId: match.playerTwoId, 
 						winner:winResult[0], 
 						moves: utilityFunctions.create1DArrayFrom3D(activeGames[socket.room].moves),
 						turns: activeGames[socket.room].turns,
 						winningMoves: utilityFunctions.create1DArrayFrom3D(activeGames[socket.room].moves),
 						gameType: 'test',
 						gameState: 'finished'
+					});
 
-					});
 					historyMatch.save(function (err, challenge) {
-						  if (err) return console.error(err);
+						if (err) return console.error(err);
+						match.remove({ _id: socket.matchid }, function(err, deletedMatch) {
+		                    if (err) return console.error(err);
+		                });
 					});
-					match.remove({ _id: socket.matchid }, function(err, deletedMatch) {
-                    if (err) return console.error(err);
-                });
 				});
 			}
 		});
