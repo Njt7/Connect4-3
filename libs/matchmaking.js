@@ -23,9 +23,10 @@ var matchmaking = function() {
     }, 5000);
     */
 
-    this.enterRandomQueue = function (_user){
+    this.enterRandomQueue = function (_user, usrname){
     console.log('User: %s entered random queue', _user);
-      mymatch.push({ userId : _user });
+      mymatch.push({ userId : _user,
+                     userName : usrname });
     }
     
     mymatch.on('match', function(result) {

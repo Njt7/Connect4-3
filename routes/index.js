@@ -208,10 +208,17 @@ router.get('/notready', function(req, res) {
 
 router.get('/randomqueue', function(req, res) {
     //console.log("req.id %s", req.params.id);
+    /*
+    if(savedResponses[req.user.username]){
+      console.log('this already exists');
+      return;  
+    }
 
     savedResponses[req.user.username] = res;
+
     console.log('saved Responeses %s', savedResponses[req.user.username]);
     matchListener.enterRandomQueue(req.user.username);
+    */
 
     //var string = encodeURIComponent('hotseat');
     //res.redirect('game/?room=' + string);
@@ -223,7 +230,10 @@ router.get('/ping', function(req, res){
 
 //Events
 matchListener.on('match', function(result) {
-
+    /*
+    console.log('HERE WE MIGHT HAVE A FAILURE');
+    console.log(result.a);
+    console.log(result.b);
     var match = new Match({ playerOneId: result.a['userId'], playerTwoId: result.b['userId'], gameType:'randomQueue', gameState:'waiting' });
             
         match.save(function (err, savedMatch) {
@@ -243,6 +253,7 @@ matchListener.on('match', function(result) {
     delete savedResponses[result.a['userId']];
     delete savedResponses[result.b['userId']];
     */
+    console.log('hi');
 });
 
 module.exports = router;

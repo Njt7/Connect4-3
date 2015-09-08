@@ -21,7 +21,8 @@ exports.screenToBoardPosition = function(screenPosition) {
 };
 
 exports.create1DArrayFrom3D = function(ThreeDArray) {
-
+  console.log('ThreeDArray');
+  console.log(ThreeDArray);
   var OneDArray = new Array(64);
   for (var x = 0; x < 4; x++) {
     for (var y = 0; y < 4; y++) {

@@ -9,19 +9,24 @@ block content
 
     form#new_message(method='get', action='/hotseat', type='submit')
       input#message_submit(type='submit', value='Hot Seat', name='commit') 
-    br
-    input#randomQueue(type='submit', value='Find match', name='commit')
-    br
 
     if (!user)
       br
-      input#notUser(type='button', value='Challenge a friend*', name='commit')
+      input#notUser(type='submit', value='Find match', name='commit')
       br
+      br
+      input#notUser2(type='button', value='Challenge a friend*', name='somethingelse')
+      br
+   
 
     if (user)
       br
       form#new_message(method='get', action='/sendchallenge', type='submit')
         input#message_submit(type='submit', value='Send a challenge', name='commit') 
+
+      br
+      input#randomQueue(type='submit', value='Find match', name='randomqueue')
+      br
       
   //
     .messagepop.pop

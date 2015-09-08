@@ -7,6 +7,9 @@ var Challenge = require('../models/challenge');
 var Match = require('../models/match');
 var HistoryMatch = require('../models/history');
 
+var matchmaking = require('../libs/matchmaking');
+var matchListener = new matchmaking();
+
 
 module.exports.listen = function(app){
 
@@ -173,11 +176,33 @@ module.exports.listen = function(app){
 		socket.on('error', function (err) { 
 			console.error(err.stack); // TODO, cleanup
 		})
+		socket.on('addMeToQueue', function(){
+			console.log('ADD %s', socket.id);
+			matchListener.enterRandomQueue(socket.id, socket.request.user.username);
+			
+		});
 		
     })
 
+	matchListener.on('match', function(result) {
+		console.log('DID THIS REALLY WORK WITHOUT FAILURE? %s', result.a);
+		console.log(result.a);
+		console.log(result.b);
+
+		var match = new Match({ playerOneId: result.a['userName'], playerTwoId: result.b['userName'], gameType:'randomQueue', gameState:'waiting' });
+
+		match.save(function (err, savedMatch) {
+		    if (err) return console.error(err);
+
+			io.to(result.a['userId']).emit('joinMatchWithRoom', result.room, 'playerone', result.a['userName'], savedMatch._id);
+			io.to(result.b['userId']).emit('joinMatchWithRoom', result.room, 'playertwo', result.a['userName'], savedMatch._id);
+		});
+			    
+	});
+
     return io
 }
+
 
 /*
 passportSocketIo.filterSocketsByUser(io, function(user){

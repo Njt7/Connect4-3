@@ -33,6 +33,11 @@ function deselect(e) {
         alert(string)
       });
     });
+    $("#notUser2").on('click', function() {
+      $.get("/notuser", function(string) {
+        alert(string)
+      });
+    });
 
     $(".challenge").on('click', function() {
       var reciever = $(this).val();
@@ -76,6 +81,8 @@ function deselect(e) {
 
 
     $("#randomQueue").on('click', function() {
+      console.log(socket);
+      queue();
       $.get("/randomqueue", function(data) {
         window.location.href = data;
       });  
