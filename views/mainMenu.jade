@@ -2,7 +2,7 @@ extends layout
 
 block content
   .container
-    if (user)
+    -if (user)
       br
       p You are currently logged in as #{user.username}
       br
@@ -10,7 +10,7 @@ block content
     form#new_message(method='get', action='/hotseat', type='submit')
       input#message_submit(type='submit', value='Hot Seat', name='commit') 
 
-    if (!user)
+    -if (!user)
       br
       input#notUser(type='submit', value='Find match', name='commit')
       br
@@ -19,13 +19,14 @@ block content
       br
    
 
-    if (user)
+    -if (user)
       br
       form#new_message(method='get', action='/sendchallenge', type='submit')
         input#message_submit(type='submit', value='Send a challenge', name='commit') 
 
       br
-      input#randomQueue(type='submit', value='Find match', name='randomqueue')
+      form#randomQ(method='get', action='/randomqueue', type='submit')
+        input#randomQueue(type='submit', value='Find match', name='randomqueue')
       br
       
   //

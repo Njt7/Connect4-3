@@ -30,6 +30,7 @@ var mouse, raycaster, isShiftDown = false;
 var targetRotation = 0;
 var targetRotationOnMouseDown = 0;
 var originalIntersectPosition = new THREE.Vector3;
+var skyBox;
 
 var mouseX = 0;
 var mouseXOnMouseDown = 0;
@@ -121,10 +122,10 @@ function init() {
   scene = new THREE.Scene();
 
   //Testing skysphere
-  /*
+  
   geometry = new THREE.SphereGeometry(3000, 60, 40);  
   var uniforms = {  
-    texture: { type: 't', value: THREE.ImageUtils.loadTexture('/textures/milky_way_galaxy_2-wallpaper-1024x768.jpg') }
+    texture: { type: 't', value: THREE.ImageUtils.loadTexture('/textures/orion_nebula_4_by_eeitam1024x512.png') }
   };
 
   var material = new THREE.ShaderMaterial( {  
@@ -135,10 +136,10 @@ function init() {
 
   skyBox = new THREE.Mesh(geometry, material);  
   skyBox.scale.set(-1, 1, 1);  
-  skyBox.eulerOrder = 'XZY';  
+  skyBox.rotation.order = 'XZY';  
   skyBox.renderDepth = 1000.0;  
   scene.add(skyBox);  
-*/
+
   // roll-over helpers
 
   //rollOverGeo = new THREE.BoxGeometry( 250, 250, 250 );
@@ -258,9 +259,9 @@ function init() {
   //TODO Fix so that it doesnt break anything else
   //TODO HERE we can initialize a unfinished game for real with localMatch.moves;
   if(typeof localMatch != 'undefined'){
-    console.log('localMatch.playerOneId: ' + localMatch.playerOneId);
-    console.log('localMatch.moves: ' + localMatch.moves);
-    console.log('localMatch.turns: ' + localMatch.turns);
+    //console.log('localMatch.playerOneId: ' + localMatch.playerOneId);
+    //console.log('localMatch.moves: ' + localMatch.moves);
+    //console.log('localMatch.turns: ' + localMatch.turns);
     movesFromPreviousSession = create3DArrayFrom1D(localMatch.moves);
     setupUnfinishedGame(movesFromPreviousSession);
     //turns = localMatch.turns;
@@ -283,8 +284,9 @@ function init() {
 
   document.addEventListener( 'mousemove', onDocumentMouseMove, false );
   document.addEventListener( 'mousedown', onDocumentMouseDown, false );
-  document.addEventListener( 'keydown', onDocumentKeyDown, false );
-  document.addEventListener( 'keyup', onDocumentKeyUp, false );
+  document.addEventListener( 'touchstart', onDocumentTouchStart, false );
+  document.addEventListener( 'touchmove', onDocumentTouchMove, false );
+  
 
   //
 
@@ -305,6 +307,7 @@ function positionInGrid(){
 
 
 }
+
 function onDocumentMouseDown( event ) {
   event.preventDefault();
 
@@ -328,7 +331,6 @@ function onDocumentMouseDown( event ) {
     rollOverMesh.position.copy( positionToDrawAndCoords[0] );
 
     originalIntersectPosition.copy( intersect.point );
-
   }
 }
 
@@ -446,43 +448,17 @@ function onDocumentTouchStart( event ) {
   if ( event.touches.length === 1 ) {
 
     event.preventDefault();
-
   }
-
 }
 
 function onDocumentTouchMove( event ) {
 
   if ( event.touches.length === 1 ) {
-
     event.preventDefault();
 
   }
-
 }
 
-
-function onDocumentKeyDown( event ) {
-
-  switch( event.keyCode ) {
-
-    case 16: isShiftDown = true; 
-
-    break;
-
-  }
-
-}
-
-function onDocumentKeyUp( event ) {
-
-  switch ( event.keyCode ) {
-
-    case 16: isShiftDown = false; break;
-
-  }
-
-}
 
 function animate() {
   

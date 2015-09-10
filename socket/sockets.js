@@ -33,7 +33,6 @@ module.exports.listen = function(app){
 				
 				Match.findById(socket.matchid, function (err, match) {
 					if (err) return console.error(err);
-						console.log(match);
 						if(!match){
 							return;
 						}
@@ -45,11 +44,6 @@ module.exports.listen = function(app){
 				console.log('moves on disconnect');
 			};
 			console.log('user disconnected');
-		});
-		socket.on('chat message', function(msg){
-
-			console.log('message: ' + msg);
-			io.emit('chat message', msg);
 		});
 
 		//game play socket actions
@@ -177,25 +171,24 @@ module.exports.listen = function(app){
 			console.error(err.stack); // TODO, cleanup
 		})
 		socket.on('addMeToQueue', function(){
-			console.log('ADD %s', socket.id);
-			matchListener.enterRandomQueue(socket.id, socket.request.user.username);
+			matchListener.enterRandomQueue(socket.request.user.username);
 			
+		});
+		socket.on('accChall', function(challInfo){
+			console.log('challinfo' + challInfo);
+			socket.emit('oppoAccedChall', challInfo);
 		});
 		
     })
 
 	matchListener.on('match', function(result) {
-		console.log('DID THIS REALLY WORK WITHOUT FAILURE? %s', result.a);
-		console.log(result.a);
-		console.log(result.b);
-
 		var match = new Match({ playerOneId: result.a['userName'], playerTwoId: result.b['userName'], gameType:'randomQueue', gameState:'waiting' });
 
 		match.save(function (err, savedMatch) {
 		    if (err) return console.error(err);
 
-			io.to(result.a['userId']).emit('joinMatchWithRoom', result.room, 'playerone', result.a['userName'], savedMatch._id);
-			io.to(result.b['userId']).emit('joinMatchWithRoom', result.room, 'playertwo', result.a['userName'], savedMatch._id);
+			io.to(result.a['userName']).emit('joinMatchWithRoom', result.room, 'playerone', result.a['userName'], savedMatch._id);
+			io.to(result.b['userName']).emit('joinMatchWithRoom', result.room, 'playertwo', result.a['userName'], savedMatch._id);
 		});
 			    
 	});

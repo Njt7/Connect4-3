@@ -64,11 +64,9 @@ router.get('/mainMenu', function(req, res, next) {
 });
 
 router.get('/game', function(req, res, next) {
-    console.log(req.session);
     console.log('LETS SEE IF THE QUERY WORKS '+ req.query.matchid)
     if(req.query.matchid){
         Match.findById(req.query.matchid, function(err, dbMatch){
-            console.log('THIS BE THE GAME' + dbMatch);
             res.render('game', { match: dbMatch, user: req.user });
         });
     }
@@ -80,6 +78,10 @@ router.get('/game', function(req, res, next) {
 router.get('/hotseat', function(req, res) {
   var string = encodeURIComponent('hotseat');
   res.redirect('game/?room=' + string );
+});
+
+router.get('/randomqueue', function(req, res, next) {
+    res.render('randomqueue', { user : req.user });
 });
 
 
@@ -168,7 +170,6 @@ router.post('/challengeaccepted', function(req, res) {
             
         match.save(function (err, savedMatch) {
             if (err) return console.error(err);
-                console.log('this should be my saved match:' +savedMatch);
 
                 Challenge.remove({ _id: req.query._id }, function(err, deletedChallenge) {
                     if (err) return console.error(err);

@@ -101,6 +101,14 @@ a.myFoot{
 	color: #000000;
 }
 
+#dialog {
+    display:none;
+}
+.myTarget {
+    font-weight:bold;
+    font-style:italic;
+    color:red;
+}
 
 
 /*

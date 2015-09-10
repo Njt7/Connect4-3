@@ -104,6 +104,7 @@ app.set('port', port);
  */
 
 var server = http.createServer(app);
+server.maxConnections = Infinity;
 var io = require('./socket/sockets').listen(server);
 
 var passportSocketIo = require("passport.socketio");

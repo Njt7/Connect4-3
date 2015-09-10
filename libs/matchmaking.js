@@ -4,6 +4,7 @@ var EventEmitter = require('events').EventEmitter;
 var matchmaker = require('matchmaker');
 var mymatch = new matchmaker;
 
+//Todo remove duplicate queued users.
 // @station - an object with `freq` and `name` properties
 var matchmaking = function() {
 
@@ -23,10 +24,9 @@ var matchmaking = function() {
     }, 5000);
     */
 
-    this.enterRandomQueue = function (_user, usrname){
-    console.log('User: %s entered random queue', _user);
-      mymatch.push({ userId : _user,
-                     userName : usrname });
+    this.enterRandomQueue = function (_user){
+        console.log('User: %s entered random queue', _user);
+        mymatch.push({ userName : _user });
     }
     
     mymatch.on('match', function(result) {
@@ -48,7 +48,7 @@ var matchmaking = function() {
 
 //matchmaking
 mymatch.policy = function(a,b) {
-    if (a != b)
+    if (a.userName !== b.userName)
         return 100
     else 
         return 0

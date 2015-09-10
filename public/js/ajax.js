@@ -51,8 +51,8 @@ function deselect(e) {
     $(".accept").on('click', function() {
       $.post("/challengeaccepted?_id="+ $(this).attr('id'), function(challenger) {
         //socket.emit('challenge', reciever, challenger);
-
-        console.log(challenger);
+        socket.emit('accChall', challenger);
+        console.log('challenger' + challenger);
         window.location.replace(challenger);
       });
     });
@@ -81,10 +81,33 @@ function deselect(e) {
 
 
     $("#randomQueue").on('click', function() {
-      console.log(socket);
       queue();
+      /*
       $.get("/randomqueue", function(data) {
         window.location.href = data;
-      });  
-    });
+      */
+      });
+      
   });
+
+//Initialize dialog
+$("#dialog").dialog({
+    autoOpen: false,
+    show: {
+        effect: "blind",
+        duration: 1
+    },
+    hide: {
+    }
+});
+
+//Open it when #opener is clicked
+$("#opener").click(function () {
+    $("#dialog").dialog("open");
+});
+
+//When the button in the form is clicked, take the input value and set that as the value of `.myTarget`
+$('.formSaver').on('click', function () {
+    $('.myTarget').text($('.myInput').val());
+    $("#dialog").dialog('close');
+});

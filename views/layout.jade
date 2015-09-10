@@ -20,12 +20,22 @@ html
           input.dividedInput(type='submit', value='History')
       br
     block content
+    block jqueryDialog
+      span.myTarget
+      #dialog(title=data)
+        p
+          | This is an animated dialog which is useful for displaying information. The dialog window can be moved, resized and closed with the 'x' icon.
+        input.myInput(type='text')
+        button.formSaver Save me!
+
     block scripts 
       script(src='http://code.jquery.com/jquery.js')
       script(src='http://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js')
-      script(src='/js/ajax.js')
       script(src='/vendor/socket.io-1.3.5.js') 
+      link(rel='stylesheet', href='https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css')
+      script(src='https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js')
       script(src='/js/clientsocket.js')
+      script(src='/js/ajax.js')
 
 block foot
       br
