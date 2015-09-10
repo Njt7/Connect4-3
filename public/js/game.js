@@ -27,6 +27,8 @@ var turns = 0;
 var camera, controls, scene, renderer;
 var plane, cube;
 var mouse, raycaster, isShiftDown = false;
+var touchPoint;
+var touchMoved = false;
 var targetRotation = 0;
 var targetRotationOnMouseDown = 0;
 var originalIntersectPosition = new THREE.Vector3;
@@ -214,6 +216,7 @@ function init() {
 
   raycaster = new THREE.Raycaster();
   mouse = new THREE.Vector2();
+  touchPoint = new THREE.Vector2();
 
   for (var i = 0; i < 16; i++) {
     var intersectPlane;
@@ -284,6 +287,9 @@ function init() {
 
   document.addEventListener( 'mousemove', onDocumentMouseMove, false );
   document.addEventListener( 'mousedown', onDocumentMouseDown, false );
+  document.addEventListener( 'touchstart', onDocumentTouchStart, false );
+  document.addEventListener( 'touchmove', onDocumentTouchMove, false );
+  document.addEventListener( 'touchend', onDocumentTouchEnd, false );
   
 
   //
@@ -304,6 +310,81 @@ function onWindowResize() {
 function positionInGrid(){
 
 
+}
+
+function onDocumentTouchStart( event ) {
+
+  if ( event.touches.length === 1 ) {
+
+    event.preventDefault();
+    touchMoved = false;
+
+    touchPoint.set( ( event.clientX / window.innerWidth ) * 2 - 1, - ( event.clientY / window.innerHeight ) * 2 + 1 );
+
+    raycaster.setFromCamera( touchPoint, camera );
+
+    var intersects = raycaster.intersectObjects( objects );
+
+    if ( intersects.length > 0 ) {
+
+      var intersect = intersects[ 0 ];
+
+      var coords = screenToBoardCoords(intersect.object.position);
+      var positionToDrawAndCoords = intersectToDesiredPosition(intersect.object.position, coords);
+     
+      rollOverMesh.position.copy( positionToDrawAndCoords[0] );
+
+      originalIntersectPosition.copy( intersect.point );
+
+    }
+  }
+}
+
+function onDocumentTouchMove( event ) {
+
+  if ( event.touches.length === 1 ) {
+    event.preventDefault();
+    
+    touchMoved = true;
+  }
+}
+
+function onDocumentTouchEnd( event ) {
+
+  if ( event.touches.length === 1 ) {
+    event.preventDefault();
+
+    if (touchmoved === true){
+      return;
+    }
+    else{
+      touchPoint.set( ( event.clientX / window.innerWidth ) * 2 - 1, - ( event.clientY / window.innerHeight ) * 2 + 1 );
+
+      raycaster.setFromCamera( mouse, camera );
+      var intersects = raycaster.intersectObjects( objects );
+      if ( intersects.length > 0 ) {
+
+        var intersect = intersects[ 0 ];
+
+        var coords = screenToBoardCoords(intersect.object.position);
+    
+        if (originalIntersectPosition.equals(intersect.point)){
+          if(gameMode === 'hotseat'){
+            var positionToDrawAndCoords = intersectToDesiredPosition(intersect.object.position, coords);
+            hotSeatPlayerAction(positionToDrawAndCoords[0], positionToDrawAndCoords[1]);
+            console.log('hotseatRoom');
+            return;
+          }
+          else{
+            var positionToDrawAndCoords = intersectToDesiredPosition(intersect.object.position, coords);
+            console.log(positionToDrawAndCoords[0]);
+            socket.emit('player action', positionToDrawAndCoords[0], positionToDrawAndCoords[1], turns % 2);
+            console.log('player action?');
+          }
+        }
+      }
+    }
+  }
 }
 
 function onDocumentMouseDown( event ) {
@@ -366,7 +447,6 @@ function onDocumentMouseUp( event ) {
         console.log('player action?');
       }
     }
-    
   }
 }
 

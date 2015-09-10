@@ -9,20 +9,20 @@ block content
 			#container
 
 				if( dbdata[i].playerOneId === user.username)
-					if(dbdata[i].winner === '1')
+					if(dbdata[i].winner === '0')
 						br
 						input.history(type='submit', value='You won versus: ' + dbdata[i].playerTwoId)
 						br
-					else if(dbdata[i].winner === '0')
+					else if(dbdata[i].winner === '1')
 						br
 						input.history(type='submit', value='You lost versus: ' + dbdata[i].playerTwoId)
 						br
 				else if( dbdata[i].playerTwoId === user.username)
-					if(dbdata[i].winner === '1')
+					if(dbdata[i].winner === '0')
 						br
 						input.history(type='submit', value='You won versus: ' + dbdata[i].playerOneId)
 						br
-					else if(dbdata[i].winner === '0')
+					else if(dbdata[i].winner === '1')
 						br
 						input.history(type='submit', value='You lost versus: ' + dbdata[i].playerOneId)
 						br
