@@ -86,11 +86,11 @@ if(vars['room'] === 'hotseat'){
 else if(vars['room'] !== undefined && gameMode != 'hotseat'){
   gameMode = 'randomMultiplayer';
   if(typeof localMatch != 'undefined'){
-    console.log('Did I get to localmatch game');
+    //console.log('Did I get to localmatch game');
     socket.emit('joinRoom', vars['room'], localMatch._id, moves);
   }
   else{
-    console.log('Did I get to ELSE');
+    //console.log('Did I get to ELSE');
     socket.emit('joinRoom', vars['room']);
   }
 }
@@ -284,8 +284,6 @@ function init() {
 
   document.addEventListener( 'mousemove', onDocumentMouseMove, false );
   document.addEventListener( 'mousedown', onDocumentMouseDown, false );
-  document.addEventListener( 'touchstart', onDocumentTouchStart, false );
-  document.addEventListener( 'touchmove', onDocumentTouchMove, false );
   
 
   //
@@ -480,11 +478,12 @@ function setupMap(){
 }
 
 socket.on('match', function(msg){
-  console.log('waow2');
+  //console.log('waow2');
+  //waow
 });
 
 socket.on('winner', function(msg){
-  console.log('winner %s', msg[0]);
+  //console.log('winner %s', msg[0]);
   win(msg[0], msg[1]);
 });
 
@@ -498,7 +497,6 @@ socket.on('player action', function(receivedPosition, coords){
   if(boardCheck(receivedPosition.x, receivedPosition.y, receivedPosition.z, passCoordsOn, (turns % 2)) === false ){
     return; //TODO: A check that cant be circumvented as well as looks if its possible to place a piece there.
   }
-  console.log('do we reach this state?');
 
   var sphere;
   turns++;
@@ -584,8 +582,6 @@ function boardCheck(x, y, z, coords, player ) {
   //TODO det är här som du ska fixa wincheck för oinloggade spelare!
   //console.log("test %s %s %s %s", x, y, z, player);
   //screen simplefied board coordinates
-    console.log("test x: %s y :%s  z: %s spelarNummer %s ", x, y, z, player);
-    console.log(coords);
 
   if(moves[coords.x][coords.y][coords.z] >= 0){
     //illegal move TODO: Bättre
@@ -675,7 +671,6 @@ function win(player, winningpcs){
 
 function heightPositionModifier(positionY){
     var positionMod = parseInt(positionY / 250);
-    console.log(positionMod);
     for (var i = 4 - positionMod; i < 4 ; i++) {
       positionY -= 0;
     }
@@ -721,41 +716,33 @@ function screenToBoardCoords(position){
 };
 
 function create3DArrayFrom1D(OneDArray) {
-console.log(OneDArray);
   var ThreeDArray = createArray(4, 4, 4);
-  console.log(ThreeDArray);
   var index = 0;
   for (var x = 0; x < 4; x++) {
     for (var y = 0; y < 4; y++) {
       for (var z = 0; z < 4; z++) {
         console.log('x: %s y: %s z %s value: %s' , x, y, z, OneDArray[index]);
-        console.log(index);
         ThreeDArray[x][y][z] = OneDArray[index];
         index++;
       };
     };
   };
-  console.log(ThreeDArray);
   return ThreeDArray;
 };
 
 function setupUnfinishedGame(previousMoves){
 // previousMoves is a 3d array of moves
-  console.log(previousMoves);
   moves = previousMoves;
   for (var x = 0; x < 4; x++) {
     for (var y = 0; y < 4; y++) {
       for (var z = 0; z < 4; z++) {
         var sphere;
-        console.log(previousMoves[x][y][z]);
         if(previousMoves[x][y][z] >= 0){
           var dePosition = new THREE.Vector3();
           dePosition.x = x;
           dePosition.y = y;
           dePosition.z = z;
-          console.log('normalDPosition: %s %s %s', dePosition.x, dePosition.y, dePosition.z);
           dePosition = denormalizePosition(dePosition);
-          console.log('denormaliizedPosition: %s %s %s',dePosition.x, dePosition.y, dePosition.z);
           if(previousMoves[x][y][z] === 0){
             sphere = new THREE.Mesh( sphereGeo, sphereMaterial2 );
           }
