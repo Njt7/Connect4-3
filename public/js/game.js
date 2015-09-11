@@ -315,11 +315,12 @@ function positionInGrid(){
 function onDocumentTouchStart( event ) {
 
   if ( event.touches.length === 1 ) {
-
+      console.log('touchStart');
     event.preventDefault();
     touchMoved = false;
 
-    touchPoint.set( ( event.clientX / window.innerWidth ) * 2 - 1, - ( event.clientY / window.innerHeight ) * 2 + 1 );
+    touchPoint.set( ( event.touches[ 0 ].pageX / window.innerWidth ) * 2 - 1, - ( event.touches[ 0 ].pageY / window.innerHeight ) * 2 + 1 );
+    console.log(touchPoint);
 
     raycaster.setFromCamera( touchPoint, camera );
 
@@ -341,7 +342,7 @@ function onDocumentTouchStart( event ) {
 }
 
 function onDocumentTouchMove( event ) {
-
+  console.log('touchMove');
   if ( event.touches.length === 1 ) {
     event.preventDefault();
     
@@ -351,40 +352,37 @@ function onDocumentTouchMove( event ) {
 
 function onDocumentTouchEnd( event ) {
 
-  if ( event.touches.length === 1 ) {
-    event.preventDefault();
+  event.preventDefault();
+  if (touchMoved === true){
+    return;
+  }
+  else{
+    console.log(touchPoint);
+    raycaster.setFromCamera( touchPoint, camera );
+    var intersects = raycaster.intersectObjects( objects );
+    if ( intersects.length > 0 ) {
 
-    if (touchmoved === true){
-      return;
-    }
-    else{
-      touchPoint.set( ( event.clientX / window.innerWidth ) * 2 - 1, - ( event.clientY / window.innerHeight ) * 2 + 1 );
+      var intersect = intersects[ 0 ];
 
-      raycaster.setFromCamera( mouse, camera );
-      var intersects = raycaster.intersectObjects( objects );
-      if ( intersects.length > 0 ) {
-
-        var intersect = intersects[ 0 ];
-
-        var coords = screenToBoardCoords(intersect.object.position);
-    
-        if (originalIntersectPosition.equals(intersect.point)){
-          if(gameMode === 'hotseat'){
-            var positionToDrawAndCoords = intersectToDesiredPosition(intersect.object.position, coords);
-            hotSeatPlayerAction(positionToDrawAndCoords[0], positionToDrawAndCoords[1]);
-            console.log('hotseatRoom');
-            return;
-          }
-          else{
-            var positionToDrawAndCoords = intersectToDesiredPosition(intersect.object.position, coords);
-            console.log(positionToDrawAndCoords[0]);
-            socket.emit('player action', positionToDrawAndCoords[0], positionToDrawAndCoords[1], turns % 2);
-            console.log('player action?');
-          }
+      var coords = screenToBoardCoords(intersect.object.position);
+  
+      if (originalIntersectPosition.equals(intersect.point)){
+        if(gameMode === 'hotseat'){
+          var positionToDrawAndCoords = intersectToDesiredPosition(intersect.object.position, coords);
+          hotSeatPlayerAction(positionToDrawAndCoords[0], positionToDrawAndCoords[1]);
+          console.log('hotseatRoom');
+          return;
+        }
+        else{
+          var positionToDrawAndCoords = intersectToDesiredPosition(intersect.object.position, coords);
+          console.log(positionToDrawAndCoords[0]);
+          socket.emit('player action', positionToDrawAndCoords[0], positionToDrawAndCoords[1], turns % 2);
+          console.log('player action?');
         }
       }
     }
   }
+  
 }
 
 function onDocumentMouseDown( event ) {
@@ -521,22 +519,6 @@ function onDocumentMouseOut( event ) {
 
 
 }
-
-function onDocumentTouchStart( event ) {
-  if ( event.touches.length === 1 ) {
-
-    event.preventDefault();
-  }
-}
-
-function onDocumentTouchMove( event ) {
-
-  if ( event.touches.length === 1 ) {
-    event.preventDefault();
-
-  }
-}
-
 
 function animate() {
   

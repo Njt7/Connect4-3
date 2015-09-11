@@ -494,7 +494,7 @@ THREE.OrbitControls = function ( object, domElement ) {
 
 	function onKeyDown( event ) {
 		// We disable keypanning for now, might wanna use them for selection in grid to play without mouse.
-		/*
+		
 		if ( scope.enabled === false || scope.noKeys === true || scope.noPan === true ) return;
 
 		switch ( event.keyCode ) {
@@ -520,7 +520,7 @@ THREE.OrbitControls = function ( object, domElement ) {
 				break;
 
 		}
-		*/
+		
 	}
 
 	function touchstart( event ) {
