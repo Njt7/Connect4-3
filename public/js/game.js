@@ -198,11 +198,11 @@ function init() {
 
   for ( var i = -size; i <= size; i += step ) {
 
-    geometry.vertices.push( new THREE.Vector3( - size, 0, i ) );
-    geometry.vertices.push( new THREE.Vector3(   size, 0, i ) );
+    geometry.vertices.push( new THREE.Vector3( - size, 1, i ) );
+    geometry.vertices.push( new THREE.Vector3(   size, 1, i ) );
 
-    geometry.vertices.push( new THREE.Vector3( i, 0, - size ) );
-    geometry.vertices.push( new THREE.Vector3( i, 0,   size ) );
+    geometry.vertices.push( new THREE.Vector3( i, 1, - size ) );
+    geometry.vertices.push( new THREE.Vector3( i, 1,   size ) );
 
   }
 
@@ -254,7 +254,7 @@ function init() {
   geometry.vertices.push( new THREE.Vector3( 550, 0, 0 ) );
   var material = new THREE.MeshLambertMaterial( { color: greenColor, opacity: 1, transparent: false } );
   dynamicBorder = new THREE.Mesh( geometry, material );
-  dynamicBorder.position.y = -51
+  dynamicBorder.position.y = -54
   scene.add( dynamicBorder );
 
   // Lights
@@ -357,7 +357,7 @@ function onDocumentTouchEnd( event ) {
     return;
   }
   else{
-    console.log(touchPoint);
+    console.log('touchend');
     raycaster.setFromCamera( touchPoint, camera );
     var intersects = raycaster.intersectObjects( objects );
     if ( intersects.length > 0 ) {
