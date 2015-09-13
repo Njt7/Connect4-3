@@ -19,15 +19,8 @@ html
         form.topNav(action='/history')
           input.dividedInput(type='submit', value='History')
       br
-    block content
-    block jqueryDialog
-      span.myTarget
-      #dialog(title=data)
-        p
-          | This is an animated dialog which is useful for displaying information. The dialog window can be moved, resized and closed with the 'x' icon.
-        input.myInput(type='text')
-        button.formSaver Save me!
 
+    block content
     block scripts 
       script(src='http://code.jquery.com/jquery.js')
       script(src='http://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js')
@@ -36,6 +29,16 @@ html
       script(src='https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js')
       script(src='/js/clientsocket.js')
       script(src='/js/ajax.js')
+     block jqueryDialog
+      script.
+        var cName = $(this).data('challengerName');
+        console.log(cName);
+      span.myTarget
+      #dialog(title=data)
+        p(value=cName)
+
+        input.myInput(type='text', test=cName)
+        button.formSaver Save me!
 
 block foot
       br

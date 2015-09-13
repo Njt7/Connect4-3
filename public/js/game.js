@@ -175,7 +175,7 @@ function init() {
   // grid
 
   //"height sticks"
-  var lineMaterial = new THREE.LineBasicMaterial( { color: 0xffffff, opacity: 0.5, transparent: true, linewidth: 10  } );
+  var lineMaterial = new THREE.LineBasicMaterial( { color: 0xffffff, opacity: 0.5, transparent: true} );
   var geometry = new THREE.Geometry();
   geometry.vertices.push(
     new THREE.Vector3( 0, 0, 0 ),
@@ -206,7 +206,7 @@ function init() {
 
   }
 
-  var lineMaterial2 = new THREE.LineBasicMaterial( { color: 0x000000, opacity: 0.2, transparent: true, lineWidth: 10  } );
+  var lineMaterial2 = new THREE.LineBasicMaterial( { color: 0x000000, opacity: 0.2, transparent: true  } );
   var line = new THREE.Line( geometry, lineMaterial2, THREE.LinePieces );
   scene.add( line );
 

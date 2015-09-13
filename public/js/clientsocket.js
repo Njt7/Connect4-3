@@ -8,7 +8,7 @@ socket.on('connection2', function(msg){
 });
 
 socket.on('oppoAccedChall', function(challengeInformation){
-	$("#dialog").data(challengeInformation).dialog("open");
+	$("#dialog").dialog("open");
   	console.log('why didnt dialog open');
 });
 
@@ -30,19 +30,20 @@ function queue(test){
 	socket.emit('addMeToQueue');
 };
 
-function acceptChallenge(information){
-	socket.emit('accChall', information);
-};
-
 
 // Add listener for recievers only
-socket.on('reciever', function(challengerName){
+socket.on('recieveChallenge', function(challengerName){
+	/*
 	var r = confirm(challengerName +' wants to challenge you!?');
 	if (r == true) {
 	    x = "You pressed OK!";
 	} else {
 	    x = "You pressed Cancel!";
 	}
-	$("#dialog").dialog("open");
+	*/
 
+	$(function() {
+		$('#dialog').data('challengerName', challengerName).dialog("open");
+	});
 });
+

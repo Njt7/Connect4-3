@@ -5,7 +5,7 @@ block content
 	if (dbdata.length > 0 )
 		- for (var i = 0; i < dbdata.length; i++)
 			if (dbdata[i].challenger != user.username)
-				#container
+				#container(challenger=dbdata[i].challenger, reciever=dbdata[i].reciever)
 					br
 					value='You have been challenged by: '+ dbdata[i].challenger
 					br

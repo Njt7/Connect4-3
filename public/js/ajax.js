@@ -48,16 +48,17 @@ function deselect(e) {
       });
     });
 
-    $(".accept").on('click', function() {
-      $.post("/challengeaccepted?_id="+ $(this).attr('id'), function(challenger) {
+    $(".accept").on('click', function(obj) {
+      var challenger = $(this).parent().attr('challenger');
+      socket.emit('accChall', 'test', challenger);
+      $.post("/challengeaccepted?_id="+ $(this).attr('id'), function(gameUrl) {
         //socket.emit('challenge', reciever, challenger);
-        socket.emit('accChall', challenger);
-        console.log('challenger' + challenger);
-        window.location.replace(challenger);
+        window.location.replace(gameUrl);
       });
     });
 
-    $(".decline").on('click', function() {
+    $(".decline").on('click', function(obj) {
+
       $.post("/challengedeclined?_id="+ $(this).attr('id')), function(challenger) {
         //Removes database object on server
       };

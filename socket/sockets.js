@@ -22,7 +22,8 @@ module.exports.listen = function(app){
 		console.log('a user connected:%s', socket );
 
 		if(socket.request.user.logged_in){
-			io.emit('connection2', 'hello world of clients');
+			//Joining room with name username
+			socket.join(socket.request.user.username);
 		}
 
 		
@@ -164,7 +165,7 @@ module.exports.listen = function(app){
 			challenge.save(function (err, challenge) {
 				  if (err) return console.error(err);
 			});
-			socket.emit('reciever', challengerName);
+			io.to(recieverName).emit('recieveChallenge', challengerName);
 
 		});
 		socket.on('error', function (err) { 
@@ -174,9 +175,12 @@ module.exports.listen = function(app){
 			matchListener.enterRandomQueue(socket.request.user.username);
 			
 		});
-		socket.on('accChall', function(challInfo){
-			console.log('challinfo' + challInfo);
-			socket.emit('oppoAccedChall', challInfo);
+		socket.on('accChall', function(gameurl, challenger){
+			//TODO io.to(not yourown username)
+			//Skicka info för att kunna göra en dialog typ x accepted your challenge, go to match or later.
+			console.log(challenger);
+			console.log('THIS BE THE CHALLENGER' + challenger);
+			io.to(challenger).emit('oppoAccedChall', challenger);
 		});
 		
     })
