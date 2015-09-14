@@ -8,8 +8,7 @@ socket.on('connection2', function(msg){
 });
 
 socket.on('oppoAccedChall', function(challengeInformation){
-	$("#dialog").dialog("open");
-  	console.log('why didnt dialog open');
+	dialogAcceptedChal(challengeInformation);
 });
 
 socket.on('joinMatchWithRoom', function(room, playerid, username, matchid){
@@ -33,17 +32,6 @@ function queue(test){
 
 // Add listener for recievers only
 socket.on('recieveChallenge', function(challengerName){
-	/*
-	var r = confirm(challengerName +' wants to challenge you!?');
-	if (r == true) {
-	    x = "You pressed OK!";
-	} else {
-	    x = "You pressed Cancel!";
-	}
-	*/
-
-	$(function() {
-		$('#dialog').data('challengerName', challengerName).dialog("open");
-	});
+	dialogRecievedChal(challengerName);
 });
 

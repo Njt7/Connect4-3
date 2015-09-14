@@ -29,16 +29,12 @@ html
       script(src='https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js')
       script(src='/js/clientsocket.js')
       script(src='/js/ajax.js')
-     block jqueryDialog
-      script.
-        var cName = $(this).data('challengerName');
-        console.log(cName);
-      span.myTarget
-      #dialog(title=data)
-        p(value=cName)
 
-        input.myInput(type='text', test=cName)
-        button.formSaver Save me!
+     block jqueryDialog
+     #dialog(title='You have been challenged')
+      p#parag
+
+
 
 block foot
       br

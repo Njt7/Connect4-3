@@ -49,8 +49,9 @@ function deselect(e) {
     });
 
     $(".accept").on('click', function(obj) {
+      var reciever = $(this).parent().attr('reciever');
       var challenger = $(this).parent().attr('challenger');
-      socket.emit('accChall', 'test', challenger);
+      socket.emit('accChall', 'test', reciever, challenger);
       $.post("/challengeaccepted?_id="+ $(this).attr('id'), function(gameUrl) {
         //socket.emit('challenge', reciever, challenger);
         window.location.replace(gameUrl);
@@ -91,6 +92,49 @@ function deselect(e) {
       
   });
 
+function dialogRecievedChal(challengerName) {
+    $("#parag").html(challengerName + ' have challenged you!');
+    $( "#dialog" ).dialog({
+      resizable: false,
+      draggable: false,
+      height:200,
+      width:320,
+      modal: true,
+      buttons: {
+        "Go to challenges": function() {
+          $( this ).dialog( "close" );
+          window.location.replace('/yourChallenges');
+        },
+        Cancel: function() {
+          $( this ).dialog( "close" );
+        }
+      }
+});
+    $(".ui-dialog-titlebar").hide();
+};
+
+function dialogAcceptedChal(accepterName) {
+    $("#parag").html(accepterName + ' accepted your challenge!');
+    $( "#dialog" ).dialog({
+      resizable: false,
+      draggable: false,
+      height:200,
+      width:320,
+      modal: true,
+      buttons: {
+        "Go to matches": function() {
+          $( this ).dialog( "close" );
+          window.location.replace('/matches');
+        },
+        Cancel: function() {
+          $( this ).dialog( "close" );
+        }
+      }
+});
+    $(".ui-dialog-titlebar").hide();
+};
+
+/*
 //Initialize dialog
 $("#dialog").dialog({
     autoOpen: false,
@@ -112,3 +156,4 @@ $('.formSaver').on('click', function () {
     $('.myTarget').text($('.myInput').val());
     $("#dialog").dialog('close');
 });
+*/

@@ -1,0 +1,14 @@
+CACHE MANIFEST
+
+CACHE:
+http://code.jquery.com/jquery.js
+http://localhost:3000/vendor/three.min.js
+http://localhost:3000/vendor/Detector.js
+http://localhost:3000/vendor/OrbitControls.js
+http://localhost:3000/vendor/tween.js
+http://localhost:3000/vendor/socket.io-1.3.5.js
+http://localhost:3000/js/game.js
+http://localhost:3000/textures/orion_nebula_4_by_eeitam1024x512.png
+
+NETWORK:
+*

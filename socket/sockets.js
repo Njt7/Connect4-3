@@ -175,12 +175,12 @@ module.exports.listen = function(app){
 			matchListener.enterRandomQueue(socket.request.user.username);
 			
 		});
-		socket.on('accChall', function(gameurl, challenger){
+		socket.on('accChall', function(gameurl, reciever, challenger){
 			//TODO io.to(not yourown username)
 			//Skicka info för att kunna göra en dialog typ x accepted your challenge, go to match or later.
-			console.log(challenger);
-			console.log('THIS BE THE CHALLENGER' + challenger);
-			io.to(challenger).emit('oppoAccedChall', challenger);
+			console.log(reciever);
+			console.log('THIS BE THE reciever' + reciever);
+			io.to(challenger).emit('oppoAccedChall', reciever);
 		});
 		
     })
