@@ -4,11 +4,9 @@ var Account = require('../models/account');
 var Challenge = require('../models/challenge');
 var Match = require('../models/match');
 var HistoryMatch = require('../models/history');
-var matchmaking = require('../libs/matchmaking');
 var router = express.Router();
 var savedResponses = {};
 
-var matchListener = new matchmaking();
 
 router.get('/', function (req, res) {
     res.render('index', { user : req.user });
@@ -107,9 +105,6 @@ router.get('/about', function(req, res) {
     res.render('about');
 });
 
-
-
-
 //Idiotic way of removing all matches to start from scratch
 
 router.get('/removematches', function(req, res) {
@@ -207,54 +202,8 @@ router.get('/notready', function(req, res) {
     res.send( 'This feature isnt ready yet' );
 });
 
-router.get('/randomqueue', function(req, res) {
-    //console.log("req.id %s", req.params.id);
-    /*
-    if(savedResponses[req.user.username]){
-      console.log('this already exists');
-      return;  
-    }
-
-    savedResponses[req.user.username] = res;
-
-    console.log('saved Responeses %s', savedResponses[req.user.username]);
-    matchListener.enterRandomQueue(req.user.username);
-    */
-
-    //var string = encodeURIComponent('hotseat');
-    //res.redirect('game/?room=' + string);
-});
-
 router.get('/ping', function(req, res){
     res.status(200).send("pong!");
-});
-
-//Events
-matchListener.on('match', function(result) {
-    /*
-    console.log('HERE WE MIGHT HAVE A FAILURE');
-    console.log(result.a);
-    console.log(result.b);
-    var match = new Match({ playerOneId: result.a['userId'], playerTwoId: result.b['userId'], gameType:'randomQueue', gameState:'waiting' });
-            
-        match.save(function (err, savedMatch) {
-            if (err) return console.error(err);
-            console.log('this should be my saved match:' +savedMatch);
-            savedResponses[result.a['userId']].send('game/?mode=unranked&playerid=playerone&room=' + result.room + '&playerunique=' + result.a['userId'] + '&matchid=' + savedMatch._id);
-            savedResponses[result.b['userId']].send('game/?mode=unranked&playerid=playertwo&room=' + result.room + '&playerunique=' + result.b['userId'] + '&matchid=' + savedMatch._id);
-            delete savedResponses[result.a['userId']];
-            delete savedResponses[result.b['userId']];
-        });
-    /*
-    //Redirecting saved responses to a unique response
-    //savedResponses[result.a['userId']].redirect('game/?mode=unranked&room=' + result.room);
-    //savedResponses[result.b['userId']].redirect('game/?mode=unranked&room=' + result.room);
-    savedResponses[result.a['userId']].send('game/?mode=unranked&playerid=playerone&room=' + result.room + '&playerunique=' + result.a['userId']);
-    savedResponses[result.b['userId']].send('game/?mode=unranked&playerid=playertwo&room=' + result.room + '&playerunique=' + result.b['userId']);
-    delete savedResponses[result.a['userId']];
-    delete savedResponses[result.b['userId']];
-    */
-    console.log('hi');
 });
 
 module.exports = router;

@@ -37,6 +37,7 @@ var skyBox;
 var mouseX = 0;
 var mouseXOnMouseDown = 0;
 var size = 500, step = 250;
+var isGameOver = false;
 
 var windowHalfX = window.innerWidth / 2;
 var windowHalfY = window.innerHeight / 2;
@@ -352,6 +353,10 @@ function onDocumentTouchMove( event ) {
 
 function onDocumentTouchEnd( event ) {
 
+  if(isGameOver === true){
+    return;
+  }
+
   event.preventDefault();
   if (touchMoved === true){
     return;
@@ -412,6 +417,10 @@ function onDocumentMouseDown( event ) {
 }
 
 function onDocumentMouseUp( event ) {
+
+  if(isGameOver === true){
+    return;
+  }
   event.preventDefault();
   document.addEventListener( 'mousemove', onDocumentMouseMove, false );
   //document.addEventListener( 'mouseup', onDocumentMouseUp, false );
@@ -657,6 +666,7 @@ function boardCheck(x, y, z, coords, player ) {
 }
 
 function win(player, winningpcs){
+  isGameOver = true;
   //TODO player behöver översättas ifrån 0, 1 till username
   if(winningpcs){
     //take first and last position to draw a line. 
@@ -706,29 +716,34 @@ function win(player, winningpcs){
 
     scene.add( line );
     }
+
+    
+    
     if(typeof localMatch != 'undefined'){
       //TODO
       //if player === localMatch.user.username
       // else 
       // localMatch.db.match.username....
       //Fix so that the correct username is shown on winner
+
       if(player === 0){
-        alert( localMatch.playerOneId + ' won! Congratulations');
+        confirmationDialog(localMatch.playerOneId + ' won! Congratulations');
       }
       else if(player === 1)
       {
-        alert( localMatch.playerTwoId + ' won! Congratulations');
+        confirmationDialog(localMatch.playerTwoId + ' won! Congratulations');
       }
     }
     else{
       if(player === 0){
-        alert('Green player is a winner!');
+        confirmationDialog('Green player is a winner!');
       }
       else if(player === 1)
       {
-       alert('Purple player is a winner!');
+        confirmationDialog('Purple player is a winner!');
       }
     }
+    
 }
 
 function heightPositionModifier(positionY){
@@ -824,6 +839,25 @@ function setupUnfinishedGame(previousMoves){
 function get1DIndex(x, y, z){
   //Flat[x + WIDTH * (y + DEPTH * z)] = Original[x, y, z]
   return x * 4 * 4 + y * 4 + z;
+};
+
+function confirmationDialog(text) {
+  $("#parag").html(text);
+  $( "#dialog" ).dialog({
+    resizable: false,
+    height:200,
+    width:320,
+    modal: true,
+    buttons: {
+      "Main Menu": function() {
+        $( this ).dialog( "close" );
+        window.location.replace('/mainMenu');
+      },
+      "Close": function() {
+        $( this ).dialog( "close" );
+      },
+    }
+  });
 };
 
 });

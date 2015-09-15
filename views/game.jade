@@ -1,5 +1,4 @@
 head
-html(manifest='../manifest.appcache')
     style(type='text/css').
            body {
                 margin: 0;
@@ -7,6 +6,7 @@ html(manifest='../manifest.appcache')
 body
   block content
     #container
+  
   block scripts
     //local development
     script(src='http://code.jquery.com/jquery.js')
@@ -16,6 +16,8 @@ body
     script(src='/vendor/tween.js')
     script(src='/vendor/socket.io-1.3.5.js')
     script(src='/js/game.js')
+    link(rel='stylesheet', href='https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css')
+    script(src='https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js')
     script(type='text/javascript').
         var localMatch = !{JSON.stringify(match)}
         var localUser = !{JSON.stringify(user)}
@@ -23,6 +25,11 @@ body
       include ../public/shaders/sky-vertex.glsl
     script#sky-fragment(type='application/x-glsl')
       include ../public/shaders/sky-fragment.glsl
+
+    block jqueryDialog
+    #dialog(title='Game Over')
+        p#parag
+
 //
     nginx for production
     script(src='http://code.jquery.com/jquery.js')

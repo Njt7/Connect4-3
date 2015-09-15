@@ -1,4 +1,37 @@
 
 extends layout
 block content
-	p1.lead this a text about everything that this page is about, i should mention all of the wonderful third party software used to create this product
+	p1.lead Hi! It is wonderful that you found your way to this page and I would like to thank you for trying my game and for showing patience if something breaks. If something do break please contact me at 
+	a.mail(href='mailto:teo@insidan.se') teo@insidan.se , 
+	p1.lead with some info on what happened when you did what. So that I can try to fix it.
+	br
+	p1.lead This project was built on top of many wonderful free softwares and I would like to use this space to give credit where the credit is due. This game would look different or would not exist at all unless the following products was as awesome as they are:
+	br
+	a.aboutLink(href='https://github.com/mrdoob/three.js/') three,
+	br
+	a.aboutLink(href='https://nodejs.org/en/') node,
+	br
+	a.aboutLink(href='https://github.com/socketio/socket.io') socket.io,
+	br
+	a.aboutLink(href='https://github.com/mongodb/mongo') mongodb,
+	br
+	a.aboutLink(href='https://github.com/Automattic/mongoose') mongoose,
+	br 
+	a.aboutLink(href='https://github.com/jaredhanson/passport') passport,
+	br
+	a.aboutLink(href='https://github.com/strongloop/express') express,
+	br
+	a.aboutLink(href='https://github.com/jadejs/jade') jade,
+	br
+	a.aboutLink(href='https://github.com/rook2pawn/node-matchmaker') node-matchmaker,
+	br
+
+	p1.lead There are also many more unmentioned. If such things peak your interests you can probably find most of what you are looking for in the dependencies of the modules mentioned above. Or through the github link bellow. 
+	p1.lead I played this game as a kid on vaccation versus my parents in rainy days. What we played looked something like this:
+	br
+	br
+	img(src='https://upload.wikimedia.org/wikipedia/commons/4/41/Connect4_3D.JPG')
+	br
+	p1.lead This has already of course been made as computer games multiple times before. But I have hopefully added some missing features for example online play in the browser. As well as learned during the process. In my opinion this is a rather good example, even if it is crude in some places on how we can use the modern browser platform to power and extend games and ideas to work on most devices 'seamlessly' across previously closed enviorments. It works sufficiently but also communicates across previously closed platforms without prejudice. The browser loves all users equally and we should give back to it the love it deserves.
+	br
+	p1.lead As long as all users have a good enough phone with an update browser that can run webgl.

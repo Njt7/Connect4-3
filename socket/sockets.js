@@ -192,7 +192,7 @@ module.exports.listen = function(app){
 		    if (err) return console.error(err);
 
 			io.to(result.a['userName']).emit('joinMatchWithRoom', result.room, 'playerone', result.a['userName'], savedMatch._id);
-			io.to(result.b['userName']).emit('joinMatchWithRoom', result.room, 'playertwo', result.a['userName'], savedMatch._id);
+			io.to(result.b['userName']).emit('joinMatchWithRoom', result.room, 'playertwo', result.b['userName'], savedMatch._id);
 		});
 			    
 	});

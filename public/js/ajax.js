@@ -42,9 +42,8 @@ function deselect(e) {
     $(".challenge").on('click', function() {
       var reciever = $(this).val();
       $.get("/challengesent?reciever="+reciever, function(challenger) {
-        alert('You have now challenged: '+reciever );
+        confirmationDialog('You have now challenged: ' + reciever);
         socket.emit('challenge', reciever, challenger);
-        console.log('hello ajax');
       });
     });
 
@@ -91,6 +90,23 @@ function deselect(e) {
       });
       
   });
+
+function confirmationDialog(text) {
+    $("#parag").html(text);
+    $( "#dialog" ).dialog({
+      resizable: false,
+      draggable: false,
+      height:200,
+      width:320,
+      modal: true,
+      buttons: {
+        "OK": function() {
+          $( this ).dialog( "close" );
+        }
+      }
+});
+    $(".ui-dialog-titlebar").hide();
+};
 
 function dialogRecievedChal(challengerName) {
     $("#parag").html(challengerName + ' have challenged you!');
