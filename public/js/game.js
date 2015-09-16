@@ -20,6 +20,7 @@ if(/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|compal|elaine
 
 console.log('Mobile device? %s', isMobile);
 
+
 var socket = io();
 
 var container;
@@ -28,7 +29,9 @@ var camera, controls, scene, renderer;
 var plane, cube;
 var mouse, raycaster, isShiftDown = false;
 var touchPoint;
+var cachedPoint;
 var touchMoved = false;
+var touchEnded = true;
 var targetRotation = 0;
 var targetRotationOnMouseDown = 0;
 var originalIntersectPosition = new THREE.Vector3;
@@ -218,6 +221,7 @@ function init() {
   raycaster = new THREE.Raycaster();
   mouse = new THREE.Vector2();
   touchPoint = new THREE.Vector2();
+  cachedPoint = new THREE.Vector2();
 
   for (var i = 0; i < 16; i++) {
     var intersectPlane;
@@ -316,13 +320,15 @@ function positionInGrid(){
 function onDocumentTouchStart( event ) {
 
   if ( event.touches.length === 1 ) {
-      console.log('touchStart');
+    console.log('touchStart');
     event.preventDefault();
     touchMoved = false;
+    touchEnded = false;
 
     touchPoint.set( ( event.touches[ 0 ].pageX / window.innerWidth ) * 2 - 1, - ( event.touches[ 0 ].pageY / window.innerHeight ) * 2 + 1 );
     console.log(touchPoint);
-
+    cachedPoint.copy(touchPoint);
+    console.log(cachedPoint);
     raycaster.setFromCamera( touchPoint, camera );
 
     var intersects = raycaster.intersectObjects( objects );
@@ -337,7 +343,25 @@ function onDocumentTouchStart( event ) {
       rollOverMesh.position.copy( positionToDrawAndCoords[0] );
 
       originalIntersectPosition.copy( intersect.point );
-
+      setTimeout(function (){
+        console.log(touchEnded);
+        if ((cachedPoint.equals(touchPoint)) && touchEnded ) {
+            // Here you get the Tap event
+            console.log('TAP DAT ASS');
+            if(gameMode === 'hotseat'){
+              var positionToDrawAndCoords = intersectToDesiredPosition(intersect.object.position, coords);
+              hotSeatPlayerAction(positionToDrawAndCoords[0], positionToDrawAndCoords[1]);
+              console.log('hotseatRoom');
+              return;
+            }
+            else{
+              var positionToDrawAndCoords = intersectToDesiredPosition(intersect.object.position, coords);
+              console.log(positionToDrawAndCoords[0]);
+              socket.emit('player action', positionToDrawAndCoords[0], positionToDrawAndCoords[1], turns % 2);
+              console.log('player action?');
+            }
+        }
+    },200);
     }
   }
 }
@@ -352,11 +376,10 @@ function onDocumentTouchMove( event ) {
 }
 
 function onDocumentTouchEnd( event ) {
-
   if(isGameOver === true){
     return;
   }
-
+  touchEnded = true;
   event.preventDefault();
   if (touchMoved === true){
     return;
@@ -372,18 +395,7 @@ function onDocumentTouchEnd( event ) {
       var coords = screenToBoardCoords(intersect.object.position);
   
       if (originalIntersectPosition.equals(intersect.point)){
-        if(gameMode === 'hotseat'){
-          var positionToDrawAndCoords = intersectToDesiredPosition(intersect.object.position, coords);
-          hotSeatPlayerAction(positionToDrawAndCoords[0], positionToDrawAndCoords[1]);
-          console.log('hotseatRoom');
-          return;
-        }
-        else{
-          var positionToDrawAndCoords = intersectToDesiredPosition(intersect.object.position, coords);
-          console.log(positionToDrawAndCoords[0]);
-          socket.emit('player action', positionToDrawAndCoords[0], positionToDrawAndCoords[1], turns % 2);
-          console.log('player action?');
-        }
+        
       }
     }
   }
