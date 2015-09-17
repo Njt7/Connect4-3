@@ -10,6 +10,7 @@ var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
 var testSession = require('express-session');
 var mongoStore = require('connect-mongostore')(testSession);
+var compression = require('compression');
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
@@ -39,6 +40,7 @@ app.use(testSession({
     resave: false,
     saveUninitialized: false
 }));
+app.use(compression());
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(express.static(path.join(__dirname, 'public')));
