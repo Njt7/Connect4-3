@@ -57,8 +57,8 @@ router.get('/logout', function(req, res, next) {
     });
 });
 
-router.get('/mainMenu', function(req, res, next) {
-    res.render('mainMenu', { user : req.user });
+router.get('/mainmenu', function(req, res, next) {
+    res.render('mainmenu', { user : req.user });
 });
 
 router.get('/game', function(req, res, next) {
@@ -123,10 +123,10 @@ router.get('/removehistory', function(req, res) {
 router.get('/sendchallenge', function(req, res) {
     //Only find and return logged in users
     Account.find( {username : {$ne: req.user.username}}, function(err, users) {
-
-
-        res.render('sendchallenge', {accs : users, user: req.user } )
-    });
+        
+        console.log(users);
+        res.render('sendchallenge', {accs : users, user: req.user } );
+    }).sort({$natural: -1}).limit(25);
 });
 
 router.get('/search', function(req, res) {
