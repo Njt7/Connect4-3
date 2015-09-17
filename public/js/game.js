@@ -104,6 +104,7 @@ socket.emit('assignplayer', vars['playerid'], vars['room'], vars['playerunique']
 
 function init() {
   container = document.getElementById( 'container' );
+
   //console.log(container);
   /*
   var info = document.createElement( 'div' );
@@ -117,7 +118,15 @@ function init() {
 
   //Textures
 
-  camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 1, 10000 );
+  camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 1, 6000 );
+  if(window.innerHeight > window.innerWidth){
+    camera.fov = 65;
+  }
+  else{
+    camera.fov = 45;
+  }
+  camera.updateProjectionMatrix();
+
   camera.position.set( 500, 1600, 1300 );
   camera.lookAt( new THREE.Vector3() );
 
@@ -292,10 +301,9 @@ function init() {
 
   document.addEventListener( 'mousemove', onDocumentMouseMove, false );
   document.addEventListener( 'mousedown', onDocumentMouseDown, false );
-  document.addEventListener( 'touchstart', onDocumentTouchStart, false );
-  document.addEventListener( 'touchmove', onDocumentTouchMove, false );
-  document.addEventListener( 'touchend', onDocumentTouchEnd, false );
-  
+  document.getElementById('container').addEventListener( 'touchstart', onDocumentTouchStart, false );
+  document.getElementById('container').addEventListener( 'touchmove', onDocumentTouchMove, false );
+  document.getElementById('container').addEventListener( 'touchend', onDocumentTouchEnd, false );
 
   //
 
@@ -306,6 +314,12 @@ function init() {
 function onWindowResize() {
 
   camera.aspect = window.innerWidth / window.innerHeight;
+  if(window.innerHeight > window.innerWidth){
+    camera.fov = 65;
+  }
+  else{
+    camera.fov = 45;
+  }
   camera.updateProjectionMatrix();
 
   renderer.setSize( window.innerWidth, window.innerHeight );
@@ -324,6 +338,7 @@ function onDocumentTouchStart( event ) {
     event.preventDefault();
     touchMoved = false;
     touchEnded = false;
+
 
     touchPoint.set( ( event.touches[ 0 ].pageX / window.innerWidth ) * 2 - 1, - ( event.touches[ 0 ].pageY / window.innerHeight ) * 2 + 1 );
     console.log(touchPoint);
@@ -344,10 +359,8 @@ function onDocumentTouchStart( event ) {
 
       originalIntersectPosition.copy( intersect.point );
       setTimeout(function (){
-        console.log(touchEnded);
         if ((cachedPoint.equals(touchPoint)) && touchEnded ) {
             // Here you get the Tap event
-            console.log('TAP DAT ASS');
             if(gameMode === 'hotseat'){
               var positionToDrawAndCoords = intersectToDesiredPosition(intersect.object.position, coords);
               hotSeatPlayerAction(positionToDrawAndCoords[0], positionToDrawAndCoords[1]);
@@ -361,7 +374,7 @@ function onDocumentTouchStart( event ) {
               console.log('player action?');
             }
         }
-    },200);
+    },50);
     }
   }
 }

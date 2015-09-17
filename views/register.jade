@@ -5,14 +5,15 @@ block content
     h1 Register
     p.lead Remember to not use the same username and password for all of your internet presence.
     br
-    form(role='form', action="/register",method="post", style='max-width: 100%;')
+    form(role='form', action="/register",method="post", style='width: 100%;')
       .form-group
           input.form-control(type='text', name="username", placeholder='Username')
       .form-group
         input.form-control(type='password', name="password", placeholder='Password')
-      button.btn.btn-default(type='submit',style='width: 50%;') Register
+      br
+      button.btn.confirm(type='submit', style='width: 100%;') Register
       &nbsp;
       a(href='/')
-        button.btn.btn-primary(type="button", style='width: 49%;') Cancel
+        button.btn.cancel(type="button", style='width: 100%;') Cancel
     br
     h4= info
