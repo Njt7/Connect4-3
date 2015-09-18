@@ -374,7 +374,7 @@ function onDocumentTouchStart( event ) {
               console.log('player action?');
             }
         }
-    },50);
+    },100);
     }
   }
 }

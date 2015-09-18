@@ -101,15 +101,17 @@ function confirmationDialog(text) {
       modal: true,
       buttons: {
         "OK": function() {
+          enableScroll();
           $( this ).dialog( "close" );
         }
       }
 });
+    disableScroll();
     $(".ui-dialog-titlebar").hide();
 };
 
 function dialogRecievedChal(challengerName) {
-    $("#parag").html(challengerName + ' have challenged you!');
+    var test = $("#parag").html(challengerName + ' have challenged you!');
     $( "#dialog" ).dialog({
       resizable: false,
       draggable: false,
@@ -119,19 +121,23 @@ function dialogRecievedChal(challengerName) {
       buttons: {
         "Go to challenges": function() {
           $( this ).dialog( "close" );
+          enableScroll();
           window.location.replace('/yourChallenges');
         },
         Cancel: function() {
+          enableScroll();
           $( this ).dialog( "close" );
         }
       }
-});
+  });
+    disableScroll();
     $(".ui-dialog-titlebar").hide();
+
 };
 
 function dialogAcceptedChal(accepterName) {
     $("#parag").html(accepterName + ' accepted your challenge!');
-    $( "#dialog" ).dialog({
+  $( "#dialog" ).dialog({
       resizable: false,
       draggable: false,
       height:200,
@@ -140,15 +146,55 @@ function dialogAcceptedChal(accepterName) {
       buttons: {
         "Go to matches": function() {
           $( this ).dialog( "close" );
+          enableScroll();
           window.location.replace('/matches');
         },
         Cancel: function() {
+          enableScroll();
           $( this ).dialog( "close" );
         }
       }
-});
+  });
+  disableScroll();
     $(".ui-dialog-titlebar").hide();
 };
+
+// left: 37, up: 38, right: 39, down: 40,
+// spacebar: 32, pageup: 33, pagedown: 34, end: 35, home: 36
+var keys = {37: 1, 38: 1, 39: 1, 40: 1};
+
+function preventDefaultHack(e) {
+  e = e || window.event;
+  if (e.preventDefaultHack)
+      e.preventDefaultHack();
+  e.returnValue = false;  
+}
+
+function preventDefaultForScrollKeys(e) {
+    if (keys[e.keyCode]) {
+        preventDefaultHack(e);
+        return false;
+    }
+}
+
+function disableScroll() {
+  if (window.addEventListener) // older FF
+      window.addEventListener('DOMMouseScroll', preventDefaultHack, false);
+  window.onwheel = preventDefaultHack; // modern standard
+  window.onmousewheel = document.onmousewheel = preventDefaultHack; // older browsers, IE
+  window.ontouchmove  = preventDefaultHack; // mobile
+  document.onkeydown  = preventDefaultForScrollKeys;
+}
+
+function enableScroll() {
+    if (window.removeEventListener)
+        window.removeEventListener('DOMMouseScroll', preventDefaultHack, false);
+    window.onmousewheel = document.onmousewheel = null; 
+    window.onwheel = null; 
+    window.ontouchmove = null;  
+    document.onkeydown = null;  
+}
+
 
 /*
 //Initialize dialog

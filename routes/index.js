@@ -9,11 +9,11 @@ var savedResponses = {};
 
 
 router.get('/', function (req, res) {
-    res.render('index', { user : req.user });
+    res.render('index', { user : req.user, title: 'Connect Four Online 3D Multiplayer'});
 });
 
 router.get('/register', function(req, res) {
-    res.render('register', { } );
+    res.render('register', { title: 'Registration for connect four online' } );
 });
 
 router.post('/register', function(req, res, next) {
@@ -35,7 +35,7 @@ router.post('/register', function(req, res, next) {
 
 
 router.get('/login', function(req, res) {
-    res.render('login', { user : req.user });
+    res.render('login', { user : req.user, titel: 'Login for connect four online' });
 });
 
 router.post('/login', passport.authenticate('local'), function(req, res, next) {
@@ -58,7 +58,7 @@ router.get('/logout', function(req, res, next) {
 });
 
 router.get('/mainmenu', function(req, res, next) {
-    res.render('mainmenu', { user : req.user });
+    res.render('mainmenu', { user : req.user , titel: 'Main menu'});
 });
 
 router.get('/game', function(req, res, next) {
@@ -69,7 +69,7 @@ router.get('/game', function(req, res, next) {
         });
     }
     else{
-        res.render('game', { user : req.user });
+        res.render('game', { user : req.user, titel: 'Connect Four 3D Online Game' });
     }
 });
 
@@ -79,30 +79,34 @@ router.get('/hotseat', function(req, res) {
 });
 
 router.get('/randomqueue', function(req, res, next) {
-    res.render('randomqueue', { user : req.user });
+    res.render('randomqueue', { user : req.user, titel: 'Find a opponent' });
 });
 
+/* 
+BIG TODO
 
 router.get('/contact', function(req, res) {
     res.send({ some: 'json' });
 });
 
+*/
+
 router.get('/matches', function(req, res) {
     Match.find( {$or : [{playerOneId: req.user.username}, {playerTwoId: req.user.username}]}, function(err, matches){
         console.log('THIS BE MATCHES' + matches);
-        res.render('matches', { dbdata: matches, user: req.user });
+        res.render('matches', { dbdata: matches, user: req.user, titel: 'Your ongoing matches' });
     });
 });
 
 router.get('/history', function(req, res) {
     HistoryMatch.find( {$or : [{playerOneId: req.user.username}, {playerTwoId: req.user.username}]}, function(err, histories){
         console.log('Histories: ' + histories);
-        res.render('history', { dbdata: histories, user: req.user });
+        res.render('history', { dbdata: histories, user: req.user, titel: 'Match history' });
     });
 });
 
 router.get('/about', function(req, res) {
-    res.render('about');
+    res.render('about' ,{ titel: 'About this game and project.' });
 });
 
 //Idiotic way of removing all matches to start from scratch
@@ -145,7 +149,7 @@ router.get('/yourchallenges', function(req, res) {
         console.log(challenges);
         
         //console.log('hi testing for challenges: %s', challenges);
-        res.render('yourchallenges', { user : req.user, dbdata:challenges });
+        res.render('yourchallenges', { user : req.user, dbdata:challenges , titel: 'Your challenges' });
         })
 });
 
