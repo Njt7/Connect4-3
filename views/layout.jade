@@ -17,12 +17,14 @@ html
         width:100%;
         display:inline;
         border: 1px solid #999;
+        font: 18px "Lucida Grande", Helvetica, Arial, sans-serif;
         height: 100px;
         -webkit-box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.3);
         -moz-box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.3);
         box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.3);
-        background-color:#EEAC7E;
+        background-color:#c2e1f7;
       }
+      input:active { background:#5886a6 }
       input.dividedInput    {
         width:25%;
         display:inline;
@@ -31,6 +33,12 @@ html
         -webkit-box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.3);
         -moz-box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.3);
         box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.3);
+      }
+      input.match{
+        background-color:#3a9fe5;
+      }
+      input.history{
+       background-color:#3a9fe5; 
       }
       input.accept    {
         width:50%;
@@ -89,6 +97,10 @@ html
         font: 40px "Lucida Grande", Helvetica, Arial, sans-serif;
         color: #EEAC7E;
       }
+      p.inputDescribtion{
+        text-align:center;
+        font: 16px "Lucida Grande", Helvetica, Arial, sans-serif;
+      }
       a.myFoot{
         color: #000000;
       }
@@ -108,20 +120,106 @@ html
           margin-left: auto;
           margin-right: auto
       }
+      #maincontentbackground {
+        background-color:#f1bc97;
+        height:100%;
+        width:100%;
+        float:left; 
+      }
 
   body
 
     if user
       block profile
-        form.topNav(action='/')
-          input.dividedInput(type='submit', value='Home')
-        form.topNav(action='/yourchallenges')
-          input.dividedInput(type='submit', value='Challenges')
-        form.topNav(action='/matches')
-          input.dividedInput(type='submit', value='Matches')
-        form.topNav(action='/history')
-          input.dividedInput(type='submit', value='History')
+      case highlightMenu
+        when 'home'
+          form.topNav(action='/')
+            input.dividedInput(type='submit', value='Home', style='background-color:#eeac7e' )
+          form.topNav(action='/yourchallenges')
+            input.dividedInput(type='submit', value='Challenges')
+          form.topNav(action='/matches')
+            input.dividedInput(type='submit', value='Matches')
+          form.topNav(action='/history')
+            input.dividedInput(type='submit', value='History')
+          br
+          br
+          #maincontentbackground
+            form(action='/mainmenu')
+              input(type='submit', value='Play')
+        when 'challenges'
+          form.topNav(action='/')
+            input.dividedInput(type='submit', value='Home' )
+          form.topNav(action='/yourchallenges')
+            input.dividedInput(type='submit', value='Challenges', style='background-color:#eeac7e')
+          form.topNav(action='/matches')
+            input.dividedInput(type='submit', value='Matches')
+          form.topNav(action='/history')
+            input.dividedInput(type='submit', value='History')
+          br
+          br
+          #maincontentbackground
+            form(action='/mainmenu')
+              input(type='submit', value='Play')
+        when 'matches'
+          form.topNav(action='/')
+            input.dividedInput(type='submit', value='Home' )
+          form.topNav(action='/yourchallenges')
+            input.dividedInput(type='submit', value='Challenges')
+          form.topNav(action='/matches')
+            input.dividedInput(type='submit', value='Matches', style='background-color:#eeac7e')
+          form.topNav(action='/history')
+            input.dividedInput(type='submit', value='History')
+          br
+          br
+          #maincontentbackground
+            form(action='/mainmenu')
+              input(type='submit', value='Play')
+
+        when 'history'
+          form.topNav(action='/')
+            input.dividedInput(type='submit', value='Home' )
+          form.topNav(action='/yourchallenges')
+            input.dividedInput(type='submit', value='Challenges')
+          form.topNav(action='/matches')
+            input.dividedInput(type='submit', value='Matches')
+          form.topNav(action='/history')
+            input.dividedInput(type='submit', value='History', style='background-color:#eeac7e')
+          br
+          br
+          #maincontentbackground
+            form(action='/mainmenu')
+              input(type='submit', value='Play')
+
+        when 'mainmenu'
+          form.topNav(action='/')
+            input.dividedInput(type='submit', value='Home' )
+          form.topNav(action='/yourchallenges')
+            input.dividedInput(type='submit', value='Challenges')
+          form.topNav(action='/matches')
+            input.dividedInput(type='submit', value='Matches')
+          form.topNav(action='/history')
+            input.dividedInput(type='submit', value='History')
+          br
+          br
+          #maincontentbackground
+           form(action='/mainmenu')
+              input(type='submit', value='Play', style='background-color:#eeac7e')
+            
+        default
+          form.topNav(action='/')
+            input.dividedInput(type='submit', value='Home' )
+          form.topNav(action='/yourchallenges')
+            input.dividedInput(type='submit', value='Challenges')
+          form.topNav(action='/matches')
+            input.dividedInput(type='submit', value='Matches')
+          form.topNav(action='/history')
+            input.dividedInput(type='submit', value='History')
+          br
+          br
+          form(action='/mainmenu')
+            input(type='submit', value='Play')
       br
+        
 
     block content
     block scripts 

@@ -19,16 +19,12 @@ block content
 
 
     if (user)
-      br
-      p You are currently logged in as #{user.username}
-      br
-      form(action='/mainMenu')
-        input(type='submit', value='Play')
-      br
 
-      form(action='/logout')
-        input(type='submit', value='Logout')
-      br
+      #maincontentbackground
+        br
+        form(action='/logout')
+          input(type='submit', value='Logout')
+        br
         
-      form#new_message(method='get', action='/settings', type='submit')
-        input#message_submit(type='submit', value='Settings', name='commit') 
+      //form#new_message(method='get', action='/settings', type='submit')
+      //  input#message_submit(type='submit', value='Settings', name='commit') 

@@ -4,28 +4,30 @@
 extends layout
 
 block content
-	if (dbdata.length > 0 )
-		- for (var i = 0; i < dbdata.length; i++)
-			#container
+	#maincontentbackground
+		if (dbdata.length > 0 )
+			- for (var i = 0; i < dbdata.length; i++)
+				#container
 
-				if( dbdata[i].playerOneId === user.username)
-					if(dbdata[i].winner === '0')
-						br
-						input.history(type='submit', value='You won versus: ' + dbdata[i].playerTwoId)
-						br
-					else if(dbdata[i].winner === '1')
-						br
-						input.history(type='submit', value='You lost versus: ' + dbdata[i].playerTwoId)
-						br
-				else if( dbdata[i].playerTwoId === user.username)
-					if(dbdata[i].winner === '0')
-						br
-						input.history(type='submit', value='You won versus: ' + dbdata[i].playerOneId)
-						br
-					else if(dbdata[i].winner === '1')
-						br
-						input.history(type='submit', value='You lost versus: ' + dbdata[i].playerOneId)
-						br
-	else
+					if( dbdata[i].playerOneId === user.username)
+						if(dbdata[i].winner === '0')
+							br
+							input.history(type='submit', value='You won versus: ' + dbdata[i].playerTwoId)
+							br
+						else if(dbdata[i].winner === '1')
+							br
+							input.history(type='submit', value='You lost versus: ' + dbdata[i].playerTwoId)
+							br
+					else if( dbdata[i].playerTwoId === user.username)
+						if(dbdata[i].winner === '0')
+							br
+							input.history(type='submit', value='You won versus: ' + dbdata[i].playerOneId)
+							br
+						else if(dbdata[i].winner === '1')
+							br
+							input.history(type='submit', value='You lost versus: ' + dbdata[i].playerOneId)
+							br
+		else
+			br
+			p You dont have any history
 		br
-		p You dont have any history

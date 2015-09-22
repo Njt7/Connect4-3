@@ -9,7 +9,7 @@ var savedResponses = {};
 
 
 router.get('/', function (req, res) {
-    res.render('index', { user : req.user, title: 'Connect Four Online 3D Multiplayer'});
+    res.render('index', { user : req.user, title: 'Connect Four Online 3D Multiplayer', highlightMenu: 'home'});
 });
 
 router.get('/register', function(req, res) {
@@ -58,7 +58,7 @@ router.get('/logout', function(req, res, next) {
 });
 
 router.get('/mainmenu', function(req, res, next) {
-    res.render('mainmenu', { user : req.user , titel: 'Main menu'});
+    res.render('mainmenu', { user : req.user , titel: 'Main menu', highlightMenu: 'mainmenu'});
 });
 
 router.get('/game', function(req, res, next) {
@@ -94,14 +94,14 @@ router.get('/contact', function(req, res) {
 router.get('/matches', function(req, res) {
     Match.find( {$or : [{playerOneId: req.user.username}, {playerTwoId: req.user.username}]}, function(err, matches){
         console.log('THIS BE MATCHES' + matches);
-        res.render('matches', { dbdata: matches, user: req.user, titel: 'Your ongoing matches' });
+        res.render('matches', { dbdata: matches, user: req.user, titel: 'Your ongoing matches', highlightMenu: 'matches' });
     });
 });
 
 router.get('/history', function(req, res) {
     HistoryMatch.find( {$or : [{playerOneId: req.user.username}, {playerTwoId: req.user.username}]}, function(err, histories){
         console.log('Histories: ' + histories);
-        res.render('history', { dbdata: histories, user: req.user, titel: 'Match history' });
+        res.render('history', { dbdata: histories, user: req.user, titel: 'Match history', highlightMenu: 'history' });
     });
 });
 
@@ -149,7 +149,7 @@ router.get('/yourchallenges', function(req, res) {
         console.log(challenges);
         
         //console.log('hi testing for challenges: %s', challenges);
-        res.render('yourchallenges', { user : req.user, dbdata:challenges , titel: 'Your challenges' });
+        res.render('yourchallenges', { user : req.user, dbdata:challenges , titel: 'Your challenges', highlightMenu: 'challenges' });
         })
 });
 
