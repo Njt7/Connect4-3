@@ -24,6 +24,7 @@ module.exports.listen = function(app){
 		if(socket.request.user.logged_in){
 			//Joining room with name username
 			socket.join(socket.request.user.username);
+			//console.log(findRooms(io.sockets.adapter.rooms));
 		}
 
 		
@@ -200,6 +201,18 @@ module.exports.listen = function(app){
     return io
 }
 
+function findRooms(rooms) {
+	//Can be used to find only online users
+    var availableRooms = [];
+    if (rooms) {
+        for (var room in rooms) {
+            if (!rooms[room].hasOwnProperty(room)) {
+                availableRooms.push(room);
+            }
+        }
+    }
+    return availableRooms;
+}
 
 /*
 passportSocketIo.filterSocketsByUser(io, function(user){

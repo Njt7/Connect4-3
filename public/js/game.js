@@ -37,6 +37,11 @@ var targetRotationOnMouseDown = 0;
 var originalIntersectPosition = new THREE.Vector3;
 var skyBox;
 
+//win graphics
+var winGeo;
+var winMaterial;
+var winSpheres = [4];
+ 
 var mouseX = 0;
 var mouseXOnMouseDown = 0;
 var size = 500, step = 250;
@@ -75,32 +80,32 @@ init();
 
 animate();
 
-//Find and split query string into vars
-var vars = [], hash;
+//Find and split query string into queryVars
+var queryVars = [], hash;
 var q = document.URL.split('?')[1];
 if(q != undefined){
     q = q.split('&');
     for(var i = 0; i < q.length; i++){
         hash = q[i].split('=');
-        vars.push(hash[1]);
-        vars[hash[0]] = hash[1];
+        queryVars.push(hash[1]);
+        queryVars[hash[0]] = hash[1];
     }
 }
-if(vars['room'] === 'hotseat'){
+if(queryVars['room'] === 'hotseat'){
   gameMode = 'hotseat';
 }
-else if(vars['room'] !== undefined && gameMode != 'hotseat'){
+else if(queryVars['room'] !== undefined && gameMode != 'hotseat'){
   gameMode = 'randomMultiplayer';
   if(typeof localMatch != 'undefined'){
     //console.log('Did I get to localmatch game');
-    socket.emit('joinRoom', vars['room'], localMatch._id, moves);
+    socket.emit('joinRoom', queryVars['room'], localMatch._id, moves);
   }
   else{
     //console.log('Did I get to ELSE');
-    socket.emit('joinRoom', vars['room']);
+    socket.emit('joinRoom', queryVars['room']);
   }
 }
-socket.emit('assignplayer', vars['playerid'], vars['room'], vars['playerunique']);
+socket.emit('assignplayer', queryVars['playerid'], queryVars['room'], queryVars['playerunique']);
 
 function init() {
   container = document.getElementById( 'container' );
@@ -171,20 +176,18 @@ function init() {
   latestMoveMesh.position.y = 4000;
   scene.add( latestMoveMesh );
 
-  // cubes
 
-  /*
-  var texture = THREE.ImageUtils.loadTexture( "/textures/pattern-truchet.png" );
-  texture.wrapS = THREE.RepeatWrapping;
-  texture.wrapT = THREE.RepeatWrapping;
-  texture.repeat.set( 1, 1 );
-   --Texture mapping test-- sphereMaterial = new THREE.MeshPhongMaterial( { color: 0xff0000, ambient: 0xff0000, map: texture, shading: THREE.SmoothShading } );
-  */
-  //sphereGeo = new THREE.BoxGeometry( 250, 250, 250 );
   sphereGeo = new THREE.SphereGeometry( 80, 20, 20 );
   sphereMaterial = new THREE.MeshPhongMaterial( { color: redColor, ambient: redColor, shading: THREE.SmoothShading } );
   sphereMaterial2 = new THREE.MeshPhongMaterial( { color: greenColor, ambient: greenColor, shading: THREE.SmoothShading } );
-
+  //win graphics
+  winGeo = new THREE.SphereGeometry( 90, 100, 100 );
+  winMaterial = new THREE.MeshBasicMaterial( { color: greenColor, opacity: 0.80, transparent: true } );
+  for (var i = 0; i < 4; i++) {
+    winSpheres[i] = new THREE.Mesh( winGeo, winMaterial );
+    winSpheres[i].position.y = 5000;
+    scene.add(winSpheres[i]);
+  }
   // grid
 
   //"height sticks"
@@ -334,16 +337,13 @@ function positionInGrid(){
 function onDocumentTouchStart( event ) {
 
   if ( event.touches.length === 1 ) {
-    console.log('touchStart');
     event.preventDefault();
     touchMoved = false;
     touchEnded = false;
 
 
     touchPoint.set( ( event.touches[ 0 ].pageX / window.innerWidth ) * 2 - 1, - ( event.touches[ 0 ].pageY / window.innerHeight ) * 2 + 1 );
-    console.log(touchPoint);
     cachedPoint.copy(touchPoint);
-    console.log(cachedPoint);
     raycaster.setFromCamera( touchPoint, camera );
 
     var intersects = raycaster.intersectObjects( objects );
@@ -364,14 +364,11 @@ function onDocumentTouchStart( event ) {
             if(gameMode === 'hotseat'){
               var positionToDrawAndCoords = intersectToDesiredPosition(intersect.object.position, coords);
               hotSeatPlayerAction(positionToDrawAndCoords[0], positionToDrawAndCoords[1]);
-              console.log('hotseatRoom');
               return;
             }
             else{
               var positionToDrawAndCoords = intersectToDesiredPosition(intersect.object.position, coords);
-              console.log(positionToDrawAndCoords[0]);
               socket.emit('player action', positionToDrawAndCoords[0], positionToDrawAndCoords[1], turns % 2);
-              console.log('player action?');
             }
         }
     },100);
@@ -380,7 +377,6 @@ function onDocumentTouchStart( event ) {
 }
 
 function onDocumentTouchMove( event ) {
-  console.log('touchMove');
   if ( event.touches.length === 1 ) {
     event.preventDefault();
     
@@ -398,7 +394,6 @@ function onDocumentTouchEnd( event ) {
     return;
   }
   else{
-    console.log('touchend');
     raycaster.setFromCamera( touchPoint, camera );
     var intersects = raycaster.intersectObjects( objects );
     if ( intersects.length > 0 ) {
@@ -469,14 +464,11 @@ function onDocumentMouseUp( event ) {
       if(gameMode === 'hotseat'){
         var positionToDrawAndCoords = intersectToDesiredPosition(intersect.object.position, coords);
         hotSeatPlayerAction(positionToDrawAndCoords[0], positionToDrawAndCoords[1]);
-        console.log('hotseatRoom');
         return;
       }
       else{
         var positionToDrawAndCoords = intersectToDesiredPosition(intersect.object.position, coords);
-        console.log(positionToDrawAndCoords[0]);
         socket.emit('player action', positionToDrawAndCoords[0], positionToDrawAndCoords[1], turns % 2);
-        console.log('player action?');
       }
     }
   }
@@ -573,10 +565,7 @@ function setupMap(){
 
 }
 
-socket.on('match', function(msg){
-  //console.log('waow2');
-  //waow
-});
+
 
 socket.on('winner', function(msg){
   //console.log('winner %s', msg[0]);
@@ -588,7 +577,6 @@ socket.on('player action', function(receivedPosition, coords){
   //moves[(msg.x+375)/step][(msg.y-125)/step][(msg.y-125)/step,((msg.z-375)/step)*-1] = turns % 2;
   //Checking for win conditions as well as legal moves
   var passCoordsOn = new THREE.Vector3(coords.x, coords.y, coords.z);
-  console.log(coords);
   //Checking for win conditions as well as legal moves
   if(boardCheck(receivedPosition.x, receivedPosition.y, receivedPosition.z, passCoordsOn, (turns % 2)) === false ){
     return; //TODO: A check that cant be circumvented as well as looks if its possible to place a piece there.
@@ -630,7 +618,6 @@ socket.on('player action', function(receivedPosition, coords){
 });
 
 function hotSeatPlayerAction(msg, coords){
-  console.log(coords);
   var passCoordsOn = new THREE.Vector3(coords.x, coords.y, coords.z);
   //Checking for win conditions as well as legal moves
   if(boardCheck(msg.x, msg.y, msg.z, passCoordsOn, (turns % 2)) === false ){
@@ -706,19 +693,15 @@ function win(player, winningpcs){
     
     //Fix coolare win
     latestMoveMesh.position.y = 4000;
-    var winGeo = new THREE.SphereGeometry( 90, 100, 100 );
-    var winMaterial;
     if(player === 0){
-      winMaterial = new THREE.MeshBasicMaterial( { color: greenColor, opacity: 0.80, transparent: true } );
+      borderColorTween(greenColor);
     }
     else{
-     winMaterial = new THREE.MeshBasicMaterial( { color: redColor, opacity: 0.80, transparent: true } ); 
+      winMaterial.color = redColor;
+      borderColorTween(redColor);
     }
     for (var i = 0; i < 4; i++) {
-      var sphere;
-      sphere = new THREE.Mesh( winGeo, winMaterial );
-      sphere.position.copy(winningpcs[i]);
-      scene.add( sphere );        
+      winSpheres[i].position.copy(winningpcs[i]);  
     }
     
 
@@ -750,14 +733,24 @@ function win(player, winningpcs){
       // else 
       // localMatch.db.match.username....
       //Fix so that the correct username is shown on winner
-
+      
       if(player === 0){
-        confirmationDialog(localMatch.playerOneId + ' won! Congratulations');
+        if (queryVars['playerid'] === 'playertwo'){
+          confirmationDialog(localMatch.playerOneId + ' won! Congratulations!');
+        }
+        else{
+          confirmationDialog(localMatch.playerOneId + ' won! Maybe next time');
+        }
       }
-      else if(player === 1)
-      {
-        confirmationDialog(localMatch.playerTwoId + ' won! Congratulations');
+      else if(player === 1){        
+        if (queryVars['playerid'] === 'playerone'){
+          confirmationDialog(localMatch.playerTwoId + ' won! Congratulations!');
+        }
+        else{
+          confirmationDialog(localMatch.playerTwoId + ' won! Maybe next time');
+        }
       }
+      
     }
     else{
       if(player === 0){
@@ -823,7 +816,6 @@ function create3DArrayFrom1D(OneDArray) {
   for (var x = 0; x < 4; x++) {
     for (var y = 0; y < 4; y++) {
       for (var z = 0; z < 4; z++) {
-        console.log('x: %s y: %s z %s value: %s' , x, y, z, OneDArray[index]);
         ThreeDArray[x][y][z] = OneDArray[index];
         index++;
       };
