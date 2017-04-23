@@ -1,5 +1,5 @@
 var mongoose = require('mongoose');
-var utilityFunctions = require('../libs/utilityFunctions.js');
+var utilityFunctions = require('../libs/utilityfunctions.js');
 var Schema = mongoose.Schema;
 
 //TODO arrayfix

@@ -1,0 +1,38 @@
+extends layout
+
+block content
+    -if (!user)
+      br
+      form#new_message(method='get', action='/hotseat', type='submit')
+        input#message_submit(type='submit', value='Hot Seat', name='commit', style='background-color:#3a9fe5;') 
+      br
+      br
+      input#notUser(type='submit', value='Find match', name='commit', style='background-color:#3a9fe5;')
+      br
+      br
+      input#notUser2(type='button', value='Challenge a friend*', name='somethingelse', style='background-color:#3a9fe5;')
+      br
+      br
+   
+
+    -if (user)
+      #maincontentbackground
+        br
+        form#new_message(method='get', action='/hotseat', type='submit')
+          input#message_submit(type='submit', value='Hot Seat', name='commit', style='background-color:#3a9fe5;')
+          p.inputDescribtion Two players on one device
+        br
+
+        form#new_message(method='get', action='/sendchallenge', type='submit')
+          input#message_submit(type='submit', value='Send a challenge', name='commit', style='background-color:#3a9fe5;')
+          p.inputDescribtion Challange another user to an online game
+        br
+        //form#randomQ(method='get', action='/randomqueue', type='submit')
+        //  input#randomQueue(type='submit', value='Find match', name='randomqueue')
+        //br
+      
+  //
+    .messagepop.pop
+      p Searching for opponent
+        a.close(href='/') Cancel
+    a#contact(href='/contact') Find a opponent
